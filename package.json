@@ -9,9 +9,16 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@ai-sdk/google": "^3.0.65",
+    "@ai-sdk/react": "^3.0.171",
+    "@supabase/supabase-js": "^2.105.1",
+    "ai": "^6.0.169",
     "next": "16.2.4",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "reactflow": "^11.11.4",
+    "sonner": "^2.0.7",
+    "zustand": "^5.0.12"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

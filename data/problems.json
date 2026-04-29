@@ -1,0 +1,22 @@
+[
+  {
+    "id": "design-uber",
+    "title": "Design Uber",
+    "difficulty": "Hard",
+    "description": "Design a scalable ride-sharing platform that handles millions of concurrent users, matching drivers with riders in real-time.",
+    "requiredComponents": [
+      "load-balancer",
+      "api-server",
+      "database",
+      "cache",
+      "message-queue"
+    ]
+  },
+  {
+    "id": "design-url-shortener",
+    "title": "Design a URL Shortener",
+    "difficulty": "Medium",
+    "description": "Design a highly available service like Bitly that generates short aliases and scales to billions of read requests.",
+    "requiredComponents": ["load-balancer", "api-server", "database", "cache"]
+  }
+]
