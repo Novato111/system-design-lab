@@ -141,11 +141,13 @@ export default function CanvasPage({
         </main>
 
         {/* Evaluation Sidebar */}
-        <aside className="w-80 bg-white border-l border-zinc-200 p-6 h-full hidden xl:flex flex-col z-10 relative shadow-[-4px_0_15px_rgba(0,0,0,0.03)] overflow-y-auto">
+        {/* Evaluation Sidebar */}
+        <aside className="w-80 mr-80  bg-red-900 border-l border-zinc-200 p-6 h-full hidden xl:flex flex-col z-10 relative shadow-[-4px_0_15px_rgba(0,0,0,0.03)] overflow-y-auto">
           <h2 className="text-xl font-bold text-zinc-900 mb-6">Evaluation</h2>
 
           {evaluationReport ? (
             <div className="space-y-6">
+              {/* Score Display */}
               <div className="p-4 rounded-lg bg-zinc-50 border border-zinc-200 text-center">
                 <div className="text-sm font-medium text-zinc-500 mb-1">
                   Architecture Score
@@ -163,33 +165,51 @@ export default function CanvasPage({
                 </div>
               </div>
 
-              {evaluationReport.failed.length > 0 && (
-                <div>
-                  <h3 className="text-sm font-bold text-red-800 mb-2 flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-red-500"></span>{" "}
-                    Critical Issues
-                  </h3>
-                  <ul className="space-y-2 text-sm text-red-700 bg-red-50 p-3 rounded-md">
-                    {evaluationReport.failed.map((msg, i) => (
-                      <li key={i}>• {msg}</li>
-                    ))}
-                  </ul>
+              {/* The X-Ray: Detected Paths */}
+              <div>
+                <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-3">
+                  Detected Traffic Flow
+                </h3>
+                <div className="space-y-2 bg-zinc-900 text-green-400 p-3 rounded-md font-mono text-xs overflow-x-auto">
+                  {evaluationReport.detectedPaths.map(
+                    (path: string, i: number) => (
+                      <div key={i} className="whitespace-nowrap">
+                        {">"} {path}
+                      </div>
+                    ),
+                  )}
                 </div>
-              )}
+              </div>
 
-              {evaluationReport.passed.length > 0 && (
-                <div>
-                  <h3 className="text-sm font-bold text-green-800 mb-2 flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-green-500"></span>{" "}
-                    Passed Checks
-                  </h3>
-                  <ul className="space-y-2 text-sm text-green-700 bg-green-50 p-3 rounded-md">
-                    {evaluationReport.passed.map((msg, i) => (
-                      <li key={i}>• {msg}</li>
-                    ))}
-                  </ul>
+              {/* Categorized Feedback Linter */}
+              <div>
+                <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-3">
+                  Analysis Report
+                </h3>
+                <div className="space-y-3">
+                  {evaluationReport.feedback.map((item: any, i: number) => (
+                    <div
+                      key={i}
+                      className={`p-3 rounded-md border text-sm flex flex-col gap-1
+                      ${
+                        item.type === "critical"
+                          ? "bg-red-50 border-red-200 text-red-800"
+                          : item.type === "warning"
+                            ? "bg-orange-50 border-orange-200 text-orange-800"
+                            : "bg-green-50 border-green-200 text-green-800"
+                      }`}
+                    >
+                      <div className="flex items-center gap-2 font-bold text-xs uppercase opacity-80">
+                        <span
+                          className={`w-2 h-2 rounded-full ${item.type === "critical" ? "bg-red-500" : item.type === "warning" ? "bg-orange-500" : "bg-green-500"}`}
+                        ></span>
+                        {item.category}
+                      </div>
+                      <div>{item.message}</div>
+                    </div>
+                  ))}
                 </div>
-              )}
+              </div>
             </div>
           ) : (
             <div className="flex-1 flex items-center justify-center text-center">

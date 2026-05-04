@@ -12,8 +12,18 @@ import {
   EdgeChange,
 } from "reactflow";
 import { ComponentType } from "@/types";
-import { EvaluationReport } from "@/types";
 
+export interface FeedbackItem {
+  category: string;
+  type: "success" | "warning" | "critical";
+  message: string;
+}
+
+export interface EvaluationReport {
+  score: number;
+  detectedPaths: string[];
+  feedback: FeedbackItem[];
+}
 interface CanvasState {
   nodes: Node[];
   edges: Edge[];

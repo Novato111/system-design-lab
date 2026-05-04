@@ -7,62 +7,49 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
 
-    // 1. Extract data safely with rock-solid fallbacks
     const messages = body.messages || [];
     const nodes = body.nodes || [];
     const edges = body.edges || [];
     const evaluationReport = body.evaluationReport;
     const problemId = body.problemId || "unknown";
 
-    // 2. Safely extract canvas data for the prompt
-    const nodeNames =
+    // Format the board state for the AI
+    const componentsOnBoard =
       nodes.length > 0
-        ? nodes.map((n: any) => n.data?.label || "unknown").join(", ")
-        : "None";
+        ? nodes.map((n: any) => n.label).join(", ")
+        : "No components placed yet.";
 
     const systemPrompt = `
-      You are an elite System Design Interview Coach.
-      The user is solving the problem: "${problemId}".
+      You are an elite, strict, but helpful Senior Staff Engineer conducting a System Design Interview.
+      The candidate is solving the problem: "${problemId.toUpperCase()}".
       
-      CURRENT CANVAS STATE:
-      - Components on board: ${nodeNames}
-      - Total connections: ${edges.length}
+      CURRENT ARCHITECTURE STATE:
+      - Components on board: ${componentsOnBoard}
+      - Total Connections: ${edges.length}
       - Evaluation Score: ${evaluationReport ? evaluationReport.score + "/100" : "Not evaluated yet"}
-      - Failed Rules: ${evaluationReport && evaluationReport.failed.length > 0 ? evaluationReport.failed.join("; ") : "None"}
 
       YOUR RULES:
-      1. Be concise. Give short, punchy advice.
-      2. Act like an interviewer giving a hint. Do not just give them the answer.
-      3. Directly reference the specific components they have placed on their board.
+      1. YOU CAN SEE THE BOARD. If they have components, reference them directly. 
+      2. NEVER give them the exact answer. Give them Socratic hints.
+      3. Keep your answers concise and punchy. Maximum 3 short paragraphs.
     `;
 
-    // 3. THE BULLETPROOF MANUAL CONVERSION
-    // We bypass the buggy Vercel helper function and build the exact array Gemini expects.
-    const cleanMessages = messages.map((m: any) => {
-      let text = m.content || "";
-      // Sometimes the frontend nests the text inside a "parts" array instead of "content"
-      if (!text && m.parts) {
-        text = m.parts.map((p: any) => p.text || "").join("");
-      }
-      return {
-        role: m.role === "user" ? "user" : "assistant",
-        content: text,
-      };
-    });
+    // Ensure strict format for Gemini
+    const cleanMessages = messages.map((m: any) => ({
+      role: m.role === "user" ? "user" : "assistant",
+      content: m.content || "",
+    }));
 
-    console.log("SENDING CLEAN MESSAGES:", cleanMessages.length);
-
-    // 4. Send to Gemini (No 'await' here!)
     const result = streamText({
-      model: google("gemini-2.5-flash"),
+      model: google("gemini-3-flash-preview"),
       system: systemPrompt,
       messages: cleanMessages,
     });
 
-    // 5. Return the open stream (Use whichever method your SDK version recognizes)
-    return result.toDataStreamResponse
-      ? result.toDataStreamResponse()
-      : (result as any).toUIMessageStreamResponse();
+    console.log(
+      "🚀 [BACKEND] Stream created successfully. Returning response to frontend.",
+    );
+    return result.toTextStreamResponse();
   } catch (error: any) {
     console.error("AI ROUTE ERROR:", error);
     return new Response(JSON.stringify({ error: error.message }), {
