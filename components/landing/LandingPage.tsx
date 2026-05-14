@@ -12,6 +12,7 @@ import {
   Box,
   Check,
   ChevronDown,
+  ChevronLeft,
   ChevronRight,
   Clock,
   Cloud,
@@ -120,20 +121,17 @@ export default function LandingPage() {
 
 function SiteHeader() {
   return (
-    <motion.header
-      initial={{ y: -20, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.8, ease: premiumEase }}
-      className="fixed inset-x-0 top-6 z-50 px-4"
+    <header
+      className="fixed inset-x-0 top-4 z-[100] px-3 sm:top-6 sm:px-4"
     >
-      <div className="mx-auto flex h-[72px] max-w-[1240px] items-center justify-between rounded-[20px] border border-white/[0.08] bg-[#111111]/60 px-4 shadow-[0_0_0_1px_rgba(255,255,255,0.03),0_18px_60px_rgba(0,0,0,0.55)] backdrop-blur-2xl sm:px-5">
-        <Link href="/" className="flex items-center gap-3">
-          <div className="grid size-10 place-items-center rounded-[12px] border border-white/20 bg-white/[0.03] transition-colors hover:bg-white/[0.08]">
-            <Box className="size-6 text-white" />
+      <div className="mx-auto flex h-[58px] max-w-[1120px] items-center justify-between rounded-[16px] border border-white/[0.1] bg-[#111111]/85 px-3 shadow-[0_0_0_1px_rgba(255,255,255,0.04),0_16px_50px_rgba(0,0,0,0.6)] backdrop-blur-2xl sm:h-[64px] sm:px-4 lg:h-[68px]">
+        <Link href="/" className="flex min-w-0 items-center gap-2.5">
+          <div className="grid size-8 shrink-0 place-items-center rounded-[10px] border border-white/20 bg-white/[0.04] transition-colors hover:bg-white/[0.08] sm:size-9">
+            <Box className="size-5 text-white" />
           </div>
           <div>
-            <div className="text-[15px] font-bold tracking-[-0.01em]">SysDesign Lab</div>
-            <div className="text-[11px] font-medium uppercase tracking-[0.24em] text-slate-400">
+            <div className="text-[13px] font-bold tracking-[-0.01em] text-white sm:text-sm">SysDesign Lab</div>
+            <div className="text-[9px] font-medium uppercase tracking-[0.2em] text-slate-400 sm:text-[10px]">
               Simulator
             </div>
           </div>
@@ -163,24 +161,24 @@ function SiteHeader() {
           </Button>
           <Button
             asChild
-            className="h-11 rounded-[10px] bg-white px-5 font-semibold text-black shadow-[0_0_28px_rgba(255,255,255,0.18)] transition-all hover:scale-105 hover:bg-zinc-200"
+            className="h-9 rounded-[10px] bg-white px-3 text-xs font-semibold text-black shadow-[0_0_28px_rgba(255,255,255,0.18)] transition-all hover:scale-105 hover:bg-zinc-200 sm:h-10 sm:px-4 sm:text-sm lg:h-11 lg:px-5"
           >
             <Link href="/problems">
-              Start for Free <ArrowRight className="ml-2 size-4" />
+              Start for Free <ArrowRight className="ml-1.5 size-3.5 sm:size-4" />
             </Link>
           </Button>
         </div>
       </div>
-    </motion.header>
+    </header>
   );
 }
 
 function HeroSection() {
   return (
-    <section className="relative flex w-full items-center justify-center overflow-hidden pb-20 pt-40 ">
+    <section className="relative isolate flex w-full items-center justify-center overflow-hidden bg-[#050505] px-4 pb-14 pt-28 sm:px-6 sm:pt-32 lg:px-8 lg:pb-16 lg:pt-36">
       
       {/* --- BULLETPROOF ROW/COL LINE GRID --- */}
-      <div className="absolute inset-0 -z-10 h-full w-full">
+      <div className="pointer-events-none absolute inset-0 z-0 h-full w-full">
         {/* Pure CSS Grid - Guaranteed to render */}
         <div 
           className="absolute inset-0"
@@ -202,77 +200,62 @@ function HeroSection() {
       {/* ------------------------------------------------ */}
 
       {/* Grid Layout Container */}
-      <div className="mx-auto grid max-w-[1440px] items-center gap-12 px-6 lg:grid-cols-[500px_minmax(600px,1fr)] lg:px-10 xl:gap-20 xl:px-0">
+      <div className="relative z-[2] mx-auto grid w-full max-w-[1180px] items-center gap-8 lg:grid-cols-[410px_minmax(520px,1fr)] xl:gap-12">
         
         {/* LEFT COLUMN: Content */}
-        <div className="z-10 mt-10 flex flex-col items-start text-left lg:mt-0 lg:pl-6">
+        <div className="flex min-w-0 flex-col items-center text-center lg:items-start lg:text-left">
           
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="mb-8 inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-zinc-300 backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]"
+          <div
+            className="mb-5 inline-flex max-w-full items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-zinc-300 backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] sm:mb-6 sm:text-[10px]"
           >
             <span className="relative flex size-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#9BE870] opacity-75"></span>
               <span className="relative inline-flex size-2 rounded-full bg-[#9BE870]"></span>
             </span>
             <span>Practice. Visualize. Master.</span>
-          </motion.div>
+          </div>
           
-          <motion.h1
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            className="text-[44px] font-extrabold leading-[1.08] tracking-[-0.04em] text-white sm:text-5xl lg:text-[64px]"
+          <h1
+            className="max-w-[680px] text-[34px] font-extrabold leading-[1.08] tracking-[-0.04em] text-white sm:text-[42px] lg:text-[52px]"
           >
             Practice System Design Like It&apos;s{" "}
             <span className="text-[#9BE870]">Production.</span>
-          </motion.h1>
+          </h1>
           
-          <motion.p
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-7 max-w-[480px] text-base leading-relaxed text-zinc-400 sm:text-lg"
+          <p
+            className="mt-5 max-w-[430px] text-sm leading-7 text-zinc-400 sm:text-base"
           >
             Build real-world architectures on an interactive canvas, simulate failures, get AI feedback, and level up for your next system design interview.
-          </motion.p>
+          </p>
           
-          <motion.form
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-10 grid w-full max-w-[480px] gap-3 sm:grid-cols-[1fr_auto]"
+          <form
+            className="mt-7 grid w-full max-w-[430px] gap-2.5 sm:grid-cols-[1fr_auto]"
           >
             <label className="sr-only" htmlFor="hero-email">Email</label>
             <input
               id="hero-email"
-              className="h-14 min-w-0 flex-1 rounded-[10px] border border-white/10 bg-[#111111]/50 px-5 text-sm text-white outline-none backdrop-blur-md transition placeholder:text-zinc-500 focus:border-white/30 focus:ring-1 focus:ring-white/30"
+              className="h-11 min-w-0 flex-1 rounded-[10px] border border-white/10 bg-[#111111]/50 px-4 text-sm text-white outline-none backdrop-blur-md transition placeholder:text-zinc-500 focus:border-white/30 focus:ring-1 focus:ring-white/30 sm:h-12"
               placeholder="Enter your email"
             />
             <Button
               asChild
               size="lg"
-              className="h-14 shrink-0 rounded-[10px] bg-white px-7 text-sm font-bold text-black shadow-[0_0_20px_rgba(255,255,255,0.1)] transition-all hover:scale-[1.02] hover:bg-zinc-200"
+              className="h-11 shrink-0 rounded-[10px] bg-white px-5 text-sm font-bold text-black shadow-[0_0_20px_rgba(255,255,255,0.1)] transition-all hover:scale-[1.02] hover:bg-zinc-200 sm:h-12"
             >
               <Link href="/problems">
                 Start Designing for Free <ArrowRight className="ml-2 size-4" />
               </Link>
             </Button>
-          </motion.form>
+          </form>
 
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 0.5 }}
-            className="mt-10 flex flex-wrap items-center gap-5"
+          <div
+            className="mt-7 flex flex-wrap items-center justify-center gap-4 lg:justify-start"
           >
             <div className="flex -space-x-3">
               {[["AS", "#8b5e3c"], ["RK", "#334155"], ["PM", "#7c2d12"], ["NJ", "#52525b"]].map(([initial, color]) => (
                 <div
                   key={initial}
-                  className="grid size-11 place-items-center rounded-full border-2 border-[#050505] text-[11px] font-bold text-white shadow-sm"
+                  className="grid size-9 place-items-center rounded-full border-2 border-[#050505] text-[10px] font-bold text-white shadow-sm"
                   style={{ backgroundColor: color }}
                 >
                   {initial}
@@ -285,18 +268,15 @@ function HeroSection() {
                   <Star key={index} className="size-4 fill-current" />
                 ))}
               </div>
-              <p className="mt-1 text-sm font-medium text-zinc-500">Loved by 10,000+ engineers worldwide</p>
+              <p className="mt-1 text-xs font-medium text-zinc-500 sm:text-[13px]">Loved by 10,000+ engineers worldwide</p>
             </div>
-          </motion.div>
+          </div>
         </div>
 
         {/* RIGHT COLUMN: Image */}
-        <div className="relative z-20 flex w-full items-center justify-center lg:pr-6">
-          <motion.div
-            initial={{ opacity: 0, x: 40, scale: 0.95, rotateY: -5, rotateX: 5 }}
-            animate={{ opacity: 1, x: 0, scale: 1, rotateY: 0, rotateX: 0 }}
-            transition={{ duration: 1.4, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="relative w-full overflow-hidden rounded-[20px] border border-white/10 bg-[#0B0B0C] p-2 shadow-[0_0_0_1px_rgba(255,255,255,0.03),0_40px_100px_rgba(0,0,0,0.7)] backdrop-blur-xl perspective-[1000px]"
+        <div className="relative flex w-full min-w-0 items-center justify-center">
+          <div
+            className="relative w-full max-w-[640px] overflow-hidden rounded-[16px] border border-white/10 bg-[#0B0B0C] p-1.5 shadow-[0_0_0_1px_rgba(255,255,255,0.03),0_30px_80px_rgba(0,0,0,0.65)] backdrop-blur-xl perspective-[1000px] lg:max-w-none"
           >
             <div className="absolute inset-x-0 top-0 z-20 h-[1px] bg-gradient-to-r from-transparent via-white/60 to-transparent" />
             <div className="absolute inset-x-0 top-0 z-10 h-[6px] bg-gradient-to-r from-transparent via-white/20 to-transparent blur-[2px]" />
@@ -308,9 +288,9 @@ function HeroSection() {
               height={800}
               priority
               unoptimized
-              className="h-auto w-full rounded-[14px] object-cover ring-1 ring-white/10"
+              className="h-auto max-h-[320px] w-full rounded-[12px] object-cover object-left-top ring-1 ring-white/10 sm:max-h-[420px] lg:max-h-none"
             />
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>
@@ -319,9 +299,26 @@ function HeroSection() {
 function TrustBar() {
   // Reusable vertical divider to exactly match the image
   const Divider = () => <div className="hidden h-6 w-px bg-white/10 lg:block" />;
+  const marqueeItems = ["Google", "Amazon", "Microsoft", "Netflix", "Airbnb", "Stripe", "LinkedIn", "Uber", "Datadog"];
 
   return (
-    <section className="relative z-10 bg-[#050505] px-6 pb-20 pt-12 lg:px-10">
+    <section className="relative z-10 bg-[#050505]">
+      <div className="relative overflow-hidden border-y border-white/[0.06] py-3 sm:hidden">
+        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-14 bg-gradient-to-r from-[#050505] to-transparent" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-14 bg-gradient-to-l from-[#050505] to-transparent" />
+        <div className="mb-2 text-center text-[8px] font-semibold uppercase tracking-[0.24em] text-zinc-600">
+          Trusted by engineers at
+        </div>
+        <div className="flex w-max animate-trust-marquee items-center gap-8 whitespace-nowrap text-[13px] font-semibold text-white/55 grayscale">
+          {[...marqueeItems, ...marqueeItems].map((item, index) => (
+            <span key={`${item}-${index}`} className="tracking-[-0.02em]">
+              {item}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <div className="hidden px-6 pb-20 pt-12 sm:block lg:px-10">
       
       {/* --- STRONG SHINY TOP BORDER --- */}
       <div className="absolute inset-x-0 top-0 h-[1px] bg-white/5" />
@@ -398,6 +395,7 @@ function TrustBar() {
           </div>
 
         </div>
+      </div>
       </div>
     </section>
   );
@@ -593,22 +591,42 @@ function StepCardUI({ index }: { index: number }) {
       ref={sectionRef}
       id="how-it-works"
       // Switching the whole section to match the image's dark theme looks cleaner
-      className="relative bg-[#09090b] px-6 py-24 text-white lg:h-[430vh] lg:px-10 lg:py-0"
+      className="relative bg-[#09090b] px-4 py-16 text-white sm:px-6 lg:h-[430vh] lg:px-10 lg:py-0"
     >
       <div className="mx-auto max-w-[1440px] lg:sticky lg:top-0 lg:flex lg:min-h-screen lg:flex-col lg:justify-center lg:py-24">
         <div className="mx-auto max-w-[740px] text-center">
-          <p className="text-sm font-bold uppercase tracking-[0.08em] text-orange-500">
+          <p className="text-xs font-bold uppercase tracking-[0.08em] text-orange-500 sm:text-sm">
             How It Works
           </p>
-          <h2 className="mt-5 text-4xl font-extrabold leading-[1.06] tracking-[-0.055em] text-white sm:text-5xl">
+          <h2 className="mt-4 text-3xl font-extrabold leading-[1.06] tracking-[-0.055em] text-white sm:text-4xl lg:mt-5 lg:text-5xl">
             Simple workflow. Deep practice.
           </h2>
-          <p className="mx-auto mt-5 max-w-[560px] text-lg leading-8 text-slate-400">
+          <p className="mx-auto mt-4 max-w-[560px] text-sm leading-7 text-slate-400 sm:text-base lg:mt-5 lg:text-lg lg:leading-8">
             From picking a problem to getting evaluated — everything you need to master system design.
           </p>
         </div>
 
-        <div className="mt-16 grid gap-10 lg:grid-cols-[400px_1fr] lg:items-center">
+        <div className="mt-10 grid gap-4 lg:hidden">
+          {workflowSteps.map((step, index) => (
+            <article
+              key={step.title}
+              className="overflow-hidden rounded-2xl border border-white/10 bg-[#0e0e11] p-4 shadow-[0_20px_60px_rgba(0,0,0,0.28)]"
+            >
+              <div className="mb-4 flex items-center gap-3">
+                <span className="grid size-9 place-items-center rounded-xl border border-orange-500/30 bg-orange-500/10 text-sm font-bold text-orange-500">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <h3 className="text-lg font-bold tracking-[-0.02em] text-white">{step.title}</h3>
+              </div>
+              <p className="text-sm leading-6 text-slate-400">{step.text}</p>
+              <div className="mt-5 h-[250px] overflow-hidden rounded-xl sm:h-[300px]">
+                <StepCardUI index={index} />
+              </div>
+            </article>
+          ))}
+        </div>
+
+        <div className="mt-16 hidden gap-10 lg:grid lg:grid-cols-[400px_1fr] lg:items-center">
           <aside className="hidden lg:block">
             <div className="relative pl-16">
               <div className="absolute left-6 top-7 h-[calc(100%-56px)] w-px bg-white/10" />
@@ -627,7 +645,7 @@ function StepCardUI({ index }: { index: number }) {
                       type="button"
                       onClick={() => scrollToStep(index)}
                       className={`relative w-full rounded-xl p-6 text-left transition-all ${
-                        active ? "bg-white/5" : "bg-transparent hover:bg-white-[0.02]"
+                        active ? "bg-white/5" : "bg-transparent hover:bg-white/[0.02]"
                       }`}
                     >
                       <span
@@ -649,7 +667,7 @@ function StepCardUI({ index }: { index: number }) {
           </aside>
 
           {/* THE FIX: Relative container with fixed height, cards absolute positioned inside */}
-          <div className="relative h-[480px] w-full lg:h-[600px] overflow-hidden rounded-2xl">
+          <div className="relative h-[600px] w-full overflow-hidden rounded-2xl">
             {workflowSteps.map((step, index) => {
               const isActive = activeStep === index;
               return (
@@ -1044,41 +1062,29 @@ function WorkflowEvaluationPreview() {
 function FeatureGrid() {
   return (
   
-    <section id="features" className="relative overflow-hidden bg-[#050505] px-6 py-24 lg:px-10">
+    <section id="features" className="relative isolate overflow-hidden bg-[#050505] px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
          
-      <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_75%_12%,rgba(59,130,246,0.08),transparent_28%),radial-gradient(circle_at_18%_40%,rgba(255,255,255,0.045),transparent_30%)]" />
-      <div className="mx-auto max-w-[1440px]">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, ease: premiumEase }}
-          className="mb-5 text-sm font-semibold uppercase tracking-[0.08em] text-[#ff5c00]"
+      <div className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(circle_at_75%_12%,rgba(59,130,246,0.08),transparent_28%),radial-gradient(circle_at_18%_40%,rgba(255,255,255,0.045),transparent_30%)]" />
+      <div className="relative z-[2] mx-auto max-w-[1180px]">
+        <div
+          className="mb-4 text-xs font-semibold uppercase tracking-[0.08em] text-[#ff5c00] sm:text-sm"
         >
           Features
-        </motion.div>
+        </div>
 
-        <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, delay: 0.05, ease: premiumEase }}
-          className="max-w-[860px] text-4xl font-bold leading-[1.08] tracking-[-0.045em] text-white sm:text-5xl"
+        <h2
+          className="max-w-[760px] text-3xl font-bold leading-[1.08] tracking-[-0.045em] text-white sm:text-4xl lg:text-[44px]"
         >
           Built for serious system design practice.
-        </motion.h2>
+        </h2>
 
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, delay: 0.1, ease: premiumEase }}
-          className="mt-5 max-w-[460px] text-base leading-7 text-zinc-300/80"
+        <p
+          className="mt-4 max-w-[460px] text-sm leading-7 text-zinc-300/80 sm:text-base"
         >
           Every feature is engineered to mirror real-world complexity and help you think like a systems engineer.
-        </motion.p>
+        </p>
 
-        <div className="mt-6 grid gap-4 lg:grid-cols-12">
+        <div className="mt-7 grid gap-4 lg:grid-cols-12">
           <FeatureCard className="lg:col-span-5">
             <div className="flex h-full min-h-[390px] flex-col">
               <FeatureNumber value="01" />
@@ -1304,17 +1310,13 @@ function FeatureCard({
   className?: string;
 }) {
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 18 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.65, ease: premiumEase }}
-      className={`relative overflow-hidden rounded-[14px] border border-white/[0.09] bg-[linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.015))] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.07),0_24px_80px_rgba(0,0,0,0.28)] ${className}`}
+    <article
+      className={`relative overflow-hidden rounded-[14px] border border-white/[0.09] bg-[linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.015))] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.07),0_24px_80px_rgba(0,0,0,0.28)] sm:p-6 ${className}`}
     >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_80%_0%,rgba(255,255,255,0.07),transparent_28%)]" />
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/35 to-transparent" />
       <div className="relative z-10 h-full">{children}</div>
-    </motion.article>
+    </article>
   );
 }
 
@@ -1420,43 +1422,74 @@ const pricingFaqs = [
 ];
 
 function PricingSection() {
-  return (
-    <section id="pricing" className="relative overflow-hidden bg-[#050505] px-6 py-24 lg:px-10">
-      <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_50%_18%,rgba(255,255,255,0.08),transparent_28%),radial-gradient(circle_at_52%_48%,rgba(249,115,22,0.10),transparent_22%)]" />
-      <div className="absolute inset-0 -z-10 opacity-[0.2] [background-image:linear-gradient(rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.08)_1px,transparent_1px)] [background-size:48px_48px]" />
+  const pricingCarouselRef = useRef<HTMLDivElement | null>(null);
 
-      <div className="mx-auto max-w-[1340px]">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, ease: premiumEase }}
-          className="text-center"
-        >
-          <p className="text-sm font-semibold uppercase tracking-[0.08em] text-[#ff5c00]">
+  const scrollPricing = (direction: "left" | "right") => {
+    const carousel = pricingCarouselRef.current;
+    if (!carousel) return;
+
+    carousel.scrollBy({
+      left: direction === "left" ? -carousel.clientWidth * 0.86 : carousel.clientWidth * 0.86,
+      behavior: "smooth",
+    });
+  };
+
+  return (
+    <section id="pricing" className="relative isolate overflow-hidden bg-[#050505] px-4 py-16 sm:px-6 lg:px-10 lg:py-24">
+      <div className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_18%,rgba(255,255,255,0.08),transparent_28%),radial-gradient(circle_at_52%_48%,rgba(249,115,22,0.10),transparent_22%)]" />
+      <div className="pointer-events-none absolute inset-0 z-0 opacity-[0.2] [background-image:linear-gradient(rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.08)_1px,transparent_1px)] [background-size:48px_48px]" />
+
+      <div className="relative z-[2] mx-auto max-w-[1180px]">
+        <div className="text-center">
+          <p className="text-xs font-semibold uppercase tracking-[0.08em] text-[#ff5c00] sm:text-sm">
             Pricing
           </p>
-          <h2 className="mt-5 text-4xl font-extrabold leading-[1.08] tracking-[-0.055em] text-white sm:text-6xl">
+          <h2 className="mt-4 text-3xl font-extrabold leading-[1.08] tracking-[-0.055em] text-white sm:text-4xl lg:mt-5 lg:text-6xl">
             Simple pricing. Serious value.
           </h2>
-          <p className="mt-5 text-xl text-zinc-400">Choose the plan that fits your journey.</p>
-        </motion.div>
+          <p className="mt-4 text-sm text-zinc-400 sm:text-base lg:mt-5 lg:text-xl">Choose the plan that fits your journey.</p>
+        </div>
 
-        <div className="mt-16 grid gap-6 lg:grid-cols-3 lg:items-center lg:[perspective:1400px]">
+        <div className="mt-8 flex items-center justify-between lg:hidden">
+          <p className="text-xs font-medium text-zinc-500">Swipe plans or use arrows</p>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              aria-label="Previous pricing plan"
+              onClick={() => scrollPricing("left")}
+              className="grid size-9 place-items-center rounded-full border border-white/10 bg-white/[0.04] text-white/80 transition hover:bg-white/[0.08]"
+            >
+              <ChevronLeft className="size-4" />
+            </button>
+            <button
+              type="button"
+              aria-label="Next pricing plan"
+              onClick={() => scrollPricing("right")}
+              className="grid size-9 place-items-center rounded-full border border-white/10 bg-white/[0.04] text-white/80 transition hover:bg-white/[0.08]"
+            >
+              <ChevronRight className="size-4" />
+            </button>
+          </div>
+        </div>
+
+        <div
+          ref={pricingCarouselRef}
+          className="-mx-4 mt-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:mx-0 lg:mt-16 lg:grid lg:grid-cols-3 lg:items-center lg:overflow-visible lg:px-0 lg:pb-0 lg:[perspective:1400px]"
+        >
           {pricingPlans.map((plan, index) => (
             <PricingCard key={plan.name} plan={plan} index={index} />
           ))}
         </div>
 
-        <div className="mx-auto mt-10 overflow-hidden rounded-[14px] border border-white/[0.08] bg-[#0b0d10]/80 shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_24px_70px_rgba(0,0,0,0.35)]">
+        <div className="mx-auto mt-6 overflow-hidden rounded-[12px] border border-white/[0.08] bg-[#0b0d10]/80 shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_24px_70px_rgba(0,0,0,0.35)] lg:mt-10 lg:rounded-[14px]">
           {pricingFaqs.map((faq) => (
             <div
               key={faq.question}
-              className="grid gap-4 border-b border-white/[0.08] px-6 py-5 last:border-b-0 md:grid-cols-[420px_1fr_auto] md:items-center"
+              className="grid gap-3 border-b border-white/[0.08] px-4 py-4 last:border-b-0 md:grid-cols-[420px_1fr_auto] md:items-center lg:gap-4 lg:px-6 lg:py-5"
             >
-              <div className="flex items-center gap-5">
+              <div className="flex items-center gap-3 lg:gap-5">
                 <span
-                  className={`grid size-10 place-items-center rounded-xl border text-xl font-bold ${
+                  className={`grid size-8 shrink-0 place-items-center rounded-lg border text-base font-bold lg:size-10 lg:rounded-xl lg:text-xl ${
                     faq.tone === "green"
                       ? "border-green-400/30 bg-green-500/10 text-green-400"
                       : faq.tone === "orange"
@@ -1466,9 +1499,9 @@ function PricingSection() {
                 >
                   ?
                 </span>
-                <h3 className="text-xl font-semibold tracking-[-0.02em] text-white">{faq.question}</h3>
+                <h3 className="text-base font-semibold tracking-[-0.02em] text-white lg:text-xl">{faq.question}</h3>
               </div>
-              <p className="text-base text-zinc-400">{faq.answer}</p>
+              <p className="text-sm leading-6 text-zinc-400 lg:text-base">{faq.answer}</p>
               <ChevronDown className="hidden size-5 text-white md:block" />
             </div>
           ))}
@@ -1497,49 +1530,45 @@ function PricingCard({
     plan.accent === "green" ? "text-green-400" : plan.accent === "violet" ? "text-violet-400" : "text-[#ff5c00]";
 
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 50, rotate: index === 0 ? -3 : index === 2 ? 3 : 0 }}
-      whileInView={{ opacity: 1, y: 0, rotate: index === 0 ? -2 : index === 2 ? 3 : 0 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.9, delay: index * 0.08, ease: premiumEase }}
-      className={`group relative min-h-[560px] overflow-hidden rounded-[18px] border p-8 transition-transform duration-500 hover:-translate-y-2 ${
+    <article
+      className={`group relative isolate flex min-h-[430px] w-[82vw] max-w-[330px] shrink-0 snap-center overflow-hidden rounded-[16px] border p-5 transition-transform duration-500 hover:-translate-y-2 sm:w-[360px] lg:min-h-[560px] lg:w-auto lg:max-w-none lg:rounded-[18px] lg:p-8 ${
         isPro
           ? "border-[#ff5c00] bg-[#0b0d10]/92 shadow-[0_0_0_1px_rgba(255,92,0,0.25),0_0_70px_rgba(255,92,0,0.22)] lg:scale-105"
           : "border-white/[0.1] bg-[#0b0d10]/86 shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_28px_80px_rgba(0,0,0,0.42)]"
-      } ${isTeam ? "lg:translate-y-2" : ""}`}
+      } ${index === 0 ? "lg:-rotate-2" : index === 2 ? "lg:rotate-3" : ""} ${isTeam ? "lg:translate-y-2" : ""}`}
     >
-      <div className={`absolute inset-0 -z-10 ${isTeam ? "opacity-[0.11]" : "opacity-[0.22]"} [background-image:radial-gradient(rgba(255,255,255,0.25)_1px,transparent_1px)] [background-size:18px_18px]`} />
-      <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.08),transparent_30%)]" />
+      <div className={`pointer-events-none absolute inset-0 z-0 ${isTeam ? "opacity-[0.11]" : "opacity-[0.22]"} [background-image:radial-gradient(rgba(255,255,255,0.25)_1px,transparent_1px)] [background-size:18px_18px]`} />
+      <div className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.08),transparent_30%)]" />
       {isTeam && (
-        <div className="absolute inset-0 -z-10 opacity-[0.14] [background-image:linear-gradient(135deg,rgba(255,255,255,0.14)_1px,transparent_1px)] [background-size:22px_22px]" />
+        <div className="pointer-events-none absolute inset-0 z-0 opacity-[0.14] [background-image:linear-gradient(135deg,rgba(255,255,255,0.14)_1px,transparent_1px)] [background-size:22px_22px]" />
       )}
       {isPro && (
-        <div className="absolute left-1/2 top-0 z-10 flex -translate-x-1/2 items-center gap-2 rounded-b-xl border-x border-b border-[#ff5c00]/40 bg-[#2a1508] px-7 py-3 text-base font-bold text-[#ff7a1a]">
-          <Star className="size-4" />
+        <div className="absolute left-1/2 top-0 z-20 flex -translate-x-1/2 items-center gap-1.5 rounded-b-xl border-x border-b border-[#ff5c00]/40 bg-[#2a1508] px-4 py-2 text-xs font-bold text-[#ff7a1a] lg:gap-2 lg:px-7 lg:py-3 lg:text-base">
+          <Star className="size-3.5 lg:size-4" />
           Most Popular
         </div>
       )}
 
-      <div className="relative z-10 flex h-full flex-col pt-6">
-        <div className={`mb-6 grid size-14 place-items-center rounded-xl border ${tone}`}>
-          <plan.icon className="size-7" />
+      <div className="relative z-10 flex h-full w-full flex-col pt-5 lg:pt-6">
+        <div className={`mb-4 grid size-11 place-items-center rounded-xl border lg:mb-6 lg:size-14 ${tone}`}>
+          <plan.icon className="size-5 lg:size-7" />
         </div>
 
-        <h3 className="text-3xl font-bold tracking-[-0.04em] text-white">{plan.name}</h3>
-        <p className="mt-3 min-h-[52px] max-w-[300px] text-base leading-7 text-zinc-300">{plan.description}</p>
+        <h3 className="text-2xl font-bold tracking-[-0.04em] text-white lg:text-3xl">{plan.name}</h3>
+        <p className="mt-2 min-h-[44px] max-w-[300px] text-sm leading-6 text-zinc-300 lg:mt-3 lg:min-h-[52px] lg:text-base lg:leading-7">{plan.description}</p>
 
-        <div className="my-8 h-px bg-white/10" />
+        <div className="my-5 h-px bg-white/10 lg:my-8" />
 
         <div className="flex items-end gap-2">
-          <span className="text-4xl font-extrabold tracking-[-0.04em] text-white">{plan.price}</span>
-          <span className="pb-1 text-base text-zinc-400">{plan.suffix}</span>
+          <span className="text-3xl font-extrabold tracking-[-0.04em] text-white lg:text-4xl">{plan.price}</span>
+          <span className="pb-0.5 text-sm text-zinc-400 lg:pb-1 lg:text-base">{plan.suffix}</span>
         </div>
-        {isTeam && <p className="mt-3 text-sm text-zinc-400">or $299/month flat for up to 10 seats</p>}
+        {isTeam && <p className="mt-2 text-xs text-zinc-400 lg:mt-3 lg:text-sm">or $299/month flat for up to 10 seats</p>}
 
-        <ul className="mt-8 space-y-3 text-base text-zinc-200">
+        <ul className="mt-5 space-y-2 text-sm text-zinc-200 lg:mt-8 lg:space-y-3 lg:text-base">
           {plan.features.map((feature) => (
             <li key={feature} className="flex items-center gap-3">
-              <Check className={`size-5 rounded-full border p-0.5 ${checkTone}`} />
+              <Check className={`size-4 shrink-0 rounded-full border p-0.5 lg:size-5 ${checkTone}`} />
               {feature}
             </li>
           ))}
@@ -1547,7 +1576,7 @@ function PricingCard({
 
         <Button
           asChild
-          className={`mt-auto h-12 rounded-lg text-base font-bold ${
+          className={`mt-auto h-10 rounded-lg text-sm font-bold lg:h-12 lg:text-base ${
             isPro
               ? "bg-gradient-to-r from-[#f45b00] to-[#ff7a00] text-white shadow-[0_15px_40px_rgba(255,92,0,0.28)] hover:from-[#ff6a00] hover:to-[#ff8a1f]"
               : isTeam
@@ -1557,51 +1586,48 @@ function PricingCard({
         >
           <Link href="/problems">{plan.cta}</Link>
         </Button>
-        {plan.footnote && <p className="mt-4 text-center text-sm text-zinc-500">{plan.footnote}</p>}
+        {plan.footnote && <p className="mt-3 text-center text-xs text-zinc-500 lg:mt-4 lg:text-sm">{plan.footnote}</p>}
       </div>
-    </motion.article>
+    </article>
   );
 }
-
 
 
 function Testimonials() {
   return (
-    <section className="mx-auto max-w-7xl px-5 pb-32 lg:px-8">
+    <section className="mx-auto max-w-7xl px-5 pb-20 lg:px-8">
       <SectionHeading
-        eyebrow="Wall of Love"
-        title="Cracking Top Tech Interviews"
+        eyebrow="Loved by Engineers"
+        title="Helping Engineers Crack Top Tech Interviews"
         text=""
       />
-      <div className="mt-14 grid gap-6 md:grid-cols-3">
-        {testimonials.map((testimonial, i) => (
-          <motion.article 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: i * 0.15, ease: premiumEase }}
-            key={testimonial.name} 
-            className="flex flex-col justify-between rounded-3xl border border-white/[0.08] bg-gradient-to-b from-white/[0.04] to-transparent p-8"
-          >
-            <div>
-              <div className="mb-6 text-5xl font-serif text-violet-400/50">"</div>
-              <p className="text-base leading-relaxed text-slate-300">{testimonial.quote}</p>
-            </div>
-            <div className="mt-10 flex items-center gap-4">
-              <div className="grid size-12 place-items-center rounded-full bg-gradient-to-br from-slate-800 to-black text-lg font-black text-white shadow-inner border border-white/10">
+      <div className="mt-10 grid gap-5 md:grid-cols-3">
+        {testimonials.map((testimonial) => (
+          <article key={testimonial.name} className="rounded-2xl border border-white/10 bg-white/[0.035] p-7">
+            <div className="mb-5 text-4xl font-black text-violet-300">“</div>
+            <p className="min-h-24 text-sm leading-7 text-slate-300">{testimonial.quote}</p>
+            <div className="mt-7 flex items-center gap-3">
+              <div className="grid size-10 place-items-center rounded-full bg-slate-900 text-lg font-black">
                 {testimonial.mark}
               </div>
               <div>
-                <div className="font-bold text-white/90">{testimonial.name}</div>
-                <div className="text-xs font-medium text-slate-500">{testimonial.role}</div>
+                <div className="text-sm font-bold">{testimonial.name}</div>
+                <div className="text-xs text-slate-400">{testimonial.role}</div>
               </div>
             </div>
-          </motion.article>
+          </article>
         ))}
       </div>
-    </section>
-  );
-}
+      <div className="mt-6 flex justify-center gap-2">
+        {[0, 1, 2, 3, 4].map((dot) => (
+          <span
+            key={dot}
+            className={`size-2 rounded-full ${dot === 0 ? "bg-violet-300" : "bg-white/20"}`}
+          />
+        ))}
+      </div>
+    </section>)}
+
 
 function FinalCta() {
   return (
@@ -1860,10 +1886,22 @@ const problemData = [
 ];
 
 function ProblemLibrary() {
+  const carouselRef = useRef<HTMLDivElement | null>(null);
+
+  const scrollCarousel = (direction: "left" | "right") => {
+    const carousel = carouselRef.current;
+    if (!carousel) return;
+
+    carousel.scrollBy({
+      left: direction === "left" ? -carousel.clientWidth * 0.86 : carousel.clientWidth * 0.86,
+      behavior: "smooth",
+    });
+  };
+
   return (
-    <section id="problems" className="relative overflow-hidden border-t border-white/5 bg-[#050505] px-6 py-24 lg:px-10">
+    <section id="problems" className="relative isolate overflow-hidden border-t border-white/5 bg-[#050505] px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
       <div
-        className="absolute inset-0 -z-10 opacity-[0.12]"
+        className="pointer-events-none absolute inset-0 z-0 opacity-[0.12]"
         style={{
           backgroundImage:
             "linear-gradient(to right, rgba(255,255,255,0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.08) 1px, transparent 1px)",
@@ -1872,42 +1910,42 @@ function ProblemLibrary() {
           WebkitMaskImage: "radial-gradient(ellipse 78% 70% at 50% 45%, black 35%, transparent 100%)",
         }}
       />
-      <div className="absolute left-[12%] top-20 -z-10 size-[420px] rounded-full bg-blue-500/5 blur-[120px]" />
-      <div className="absolute right-[10%] top-10 -z-10 size-[520px] rounded-full bg-white/[0.035] blur-[130px]" />
+      <div className="pointer-events-none absolute left-[12%] top-20 z-0 size-[300px] rounded-full bg-blue-500/5 blur-[100px] sm:size-[420px] sm:blur-[120px]" />
+      <div className="pointer-events-none absolute right-[10%] top-10 z-0 size-[340px] rounded-full bg-white/[0.035] blur-[110px] sm:size-[520px] sm:blur-[130px]" />
 
-      <div className="mx-auto grid max-w-[1440px] items-start gap-16 lg:grid-cols-[390px_1fr] xl:grid-cols-[430px_1fr]">
+      <div className="relative z-10 mx-auto grid max-w-[1180px] items-start gap-10 lg:grid-cols-[320px_1fr] xl:grid-cols-[360px_1fr]">
         
         {/* LEFT COLUMN: Sticky Header Content */}
-        <div className="sticky top-32 flex flex-col items-start">
-          <div className="mb-8 flex items-center gap-3 text-sm font-semibold uppercase tracking-[0.13em] text-[#ff5c00]">
-            <Box className="size-5" />
+        <div className="flex min-w-0 flex-col items-start lg:sticky lg:top-24">
+          <div className="mb-5 flex items-center gap-2.5 text-xs font-semibold uppercase tracking-[0.13em] text-[#ff5c00]">
+            <Box className="size-4" />
             PROBLEM LIBRARY
           </div>
 
-          <h2 className="text-4xl font-extrabold leading-[1.22] tracking-[-0.035em] text-white sm:text-5xl lg:text-[52px]">
+          <h2 className="text-3xl font-extrabold leading-[1.15] tracking-[-0.035em] text-white sm:text-4xl lg:text-[42px]">
             <span className="text-[#ff5c00]">25+</span> Real Interview Problems, Ready to Solve.
           </h2>
 
-          <p className="mt-8 max-w-[410px] text-lg leading-9 text-zinc-400">
+          <p className="mt-5 max-w-[520px] text-sm leading-7 text-zinc-400 sm:text-base lg:max-w-[360px]">
             These are the exact problems asked at FAANG — Uber, Twitter, WhatsApp, Netflix, URL Shortener, Pastebin, Instagram Feed, Notification System, and more.
             <br />
             Each with difficulty tags.
           </p>
 
-          <div className="mt-16 grid w-full grid-cols-2 gap-y-8 sm:grid-cols-4 lg:grid-cols-4">
+          <div className="mt-8 grid w-full grid-cols-2 gap-y-5 sm:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
             {problemStats.map((stat, index) => (
               <div
                 key={stat.label}
-                className={`relative pr-5 ${index > 0 ? "border-l border-white/10 pl-5" : ""}`}
+                className={`relative pr-3 ${index % 2 === 1 ? "border-l border-white/10 pl-4 sm:border-l lg:border-l" : "sm:border-l sm:border-white/10 sm:pl-4 lg:border-l-0 lg:pl-0 xl:border-l xl:pl-4"} ${index === 0 ? "sm:border-l-0 sm:pl-0" : ""}`}
               >
-                <stat.icon className={`mb-3 size-5 ${stat.tone}`} />
-                <div className="text-2xl font-semibold tracking-[-0.03em] text-white">{stat.value}</div>
+                <stat.icon className={`mb-2 size-4 ${stat.tone}`} />
+                <div className="text-xl font-semibold tracking-[-0.03em] text-white">{stat.value}</div>
                 <div className="mt-1 text-xs leading-5 text-zinc-500">{stat.label}</div>
               </div>
             ))}
           </div>
 
-          <div className="pointer-events-none relative mt-16 hidden h-44 w-full opacity-30 lg:block">
+          <div className="pointer-events-none relative mt-10 hidden h-36 w-full opacity-30 lg:block">
             <div className="absolute left-0 top-10 h-px w-72 bg-white/10" />
             <div className="absolute left-12 top-6 grid h-11 w-20 place-items-center rounded-lg border border-white/10 text-[10px] text-zinc-600">
               Users
@@ -1925,66 +1963,91 @@ function ProblemLibrary() {
         </div>
 
         {/* RIGHT COLUMN: Scrolling Card Grid */}
-        <div className="flex flex-col">
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        <div className="min-w-0">
+          <div className="mb-3 flex items-center justify-between sm:hidden">
+            <p className="text-xs font-medium text-zinc-500">Swipe or use arrows</p>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                aria-label="Previous problem"
+                onClick={() => scrollCarousel("left")}
+                className="grid size-9 place-items-center rounded-full border border-white/10 bg-white/[0.04] text-white/80 transition hover:bg-white/[0.08]"
+              >
+                <ChevronLeft className="size-4" />
+              </button>
+              <button
+                type="button"
+                aria-label="Next problem"
+                onClick={() => scrollCarousel("right")}
+                className="grid size-9 place-items-center rounded-full border border-white/10 bg-white/[0.04] text-white/80 transition hover:bg-white/[0.08]"
+              >
+                <ChevronRight className="size-4" />
+              </button>
+            </div>
+          </div>
+
+          <div
+            ref={carouselRef}
+            className="-mx-4 flex min-w-0 snap-x snap-mandatory gap-3.5 overflow-x-auto px-4 pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 sm:pb-0 xl:grid-cols-3"
+          >
             {problemData.map((problem, i) => (
               <motion.article
                 initial={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.45, delay: i * 0.03 }}
                 key={problem.title}
-                className="group relative flex min-h-[244px] cursor-pointer flex-col overflow-hidden rounded-[14px] border border-white/[0.11] bg-[linear-gradient(180deg,rgba(255,255,255,0.075),rgba(255,255,255,0.025))] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_24px_60px_rgba(0,0,0,0.32)] backdrop-blur-sm transition-all hover:-translate-y-1 hover:border-white/18 hover:bg-white/[0.065]"
+                className="group relative flex min-h-[190px] w-[82vw] max-w-[340px] shrink-0 snap-center cursor-pointer flex-col overflow-hidden rounded-[12px] border border-white/[0.11] bg-[linear-gradient(180deg,rgba(255,255,255,0.075),rgba(255,255,255,0.025))] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_18px_45px_rgba(0,0,0,0.28)] backdrop-blur-sm transition-all hover:-translate-y-1 hover:border-white/18 hover:bg-white/[0.065] sm:min-h-[208px] sm:w-auto sm:max-w-none sm:p-5"
               >
                 <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/45 to-transparent opacity-70" />
 
-                <div className="flex items-start justify-between gap-5">
-                  <div className="flex items-start gap-5">
-                    <div className={`grid size-16 shrink-0 place-items-center rounded-[10px] border text-zinc-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] ${problem.iconTone}`}>
+                <div className="flex min-w-0 items-start justify-between gap-3">
+                  <div className="flex min-w-0 items-start gap-3.5">
+                    <div className={`grid size-12 shrink-0 place-items-center rounded-[10px] border text-zinc-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] sm:size-14 ${problem.iconTone}`}>
                       {problem.brand ? (
-                        <span className={problem.brand === "N" ? "text-4xl font-black tracking-[-0.08em]" : "text-lg font-medium tracking-[-0.08em]"}>
+                        <span className={problem.brand === "N" ? "text-3xl font-black tracking-[-0.08em]" : "text-base font-medium tracking-[-0.08em]"}>
                           {problem.brand}
                         </span>
                       ) : (
-                        problem.icon && <problem.icon className="size-8" />
+                        problem.icon && <problem.icon className="size-6 sm:size-7" />
                       )}
                     </div>
                     
-                    <div>
-                      <h3 className="max-w-[170px] text-lg font-semibold leading-6 tracking-[-0.02em] text-white/95 transition-colors group-hover:text-white">
+                    <div className="min-w-0">
+                      <h3 className="max-w-full text-base font-semibold leading-5 tracking-[-0.02em] text-white/95 transition-colors group-hover:text-white sm:text-[17px] sm:leading-6">
                         {problem.title}
                       </h3>
-                      <div className={`mt-2 w-fit rounded-[6px] border px-2 py-1 text-sm font-medium leading-none ${problem.diffColor}`}>
+                      <div className={`mt-2 w-fit rounded-[6px] border px-2 py-1 text-xs font-medium leading-none ${problem.diffColor}`}>
                         {problem.difficulty}
                       </div>
                     </div>
                   </div>
                   
-                  <ChevronRight className="mt-1 size-5 shrink-0 text-zinc-300 transition-transform group-hover:translate-x-1 group-hover:text-white" />
+                  <ChevronRight className="mt-1 size-4 shrink-0 text-zinc-300 transition-transform group-hover:translate-x-1 group-hover:text-white" />
                 </div>
 
-                <p className="mt-6 min-h-[78px] text-[15px] leading-7 text-zinc-300/80">
+                <p className="mt-4 min-h-[58px] text-[13px] leading-6 text-zinc-300/80 sm:mt-5">
                   {problem.description}
                 </p>
 
-                <div className="mt-auto flex items-center gap-6 border-t border-white/10 pt-4 text-sm font-medium text-zinc-300/80">
-                  <div className="flex items-center gap-1.5">
+                <div className="mt-auto flex min-w-0 items-center gap-3 border-t border-white/10 pt-3.5 text-xs font-medium text-zinc-300/80">
+                  <div className="flex shrink-0 items-center gap-1.5">
                     <Clock className="size-4" />
                     {problem.time}
                   </div>
                   <div className="h-6 w-px bg-white/10" />
-                  <div>{problem.category}</div>
+                  <div className="min-w-0 truncate">{problem.category}</div>
                 </div>
               </motion.article>
             ))}
           </div>
 
           {/* View All Action */}
-          <div className="mt-4 flex justify-center rounded-[14px] border border-white/[0.08] bg-white/[0.025] py-7 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
+          <div className="mt-3.5 flex justify-center rounded-[12px] border border-white/[0.08] bg-white/[0.025] py-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
             <Link 
               href="/problems" 
-              className="group flex items-center gap-3 text-lg font-medium text-[#ff5c00] underline underline-offset-4 transition-colors hover:text-[#ff7a33]"
+              className="group flex items-center gap-2.5 text-sm font-medium text-[#ff5c00] underline underline-offset-4 transition-colors hover:text-[#ff7a33] sm:text-base"
             >
               View all 25 problems 
-              <ArrowRight className="size-5 transition-transform group-hover:translate-x-1" />
+              <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
             </Link>
           </div>
         </div>
