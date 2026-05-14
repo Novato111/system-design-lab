@@ -98,7 +98,7 @@ export function AnimatedCanvasMock() {
       </div>
 
       {/* Sidebar Navigation */}
-      <div className="absolute left-2 top-12 w-24 rounded-lg border border-white/10 bg-[#121317] p-3 shadow-2xl z-20">
+      <div className="absolute left-2  top-2 w-24 rounded-lg border border-white/10 bg-[#121317] p-3  shadow-2xl z-20">
         {sidebarItems.map((item, idx) => (
           <motion.div
             key={item}

@@ -30,35 +30,8 @@ export function SiteHeader() {
         />
 
         <Link href="/" className="relative z-10 flex min-w-0 items-center gap-2.5">
-          <div className="grid size-8 shrink-0 place-items-center rounded-[10px] border border-[#ff5c00]/30 bg-[#ff5c00]/10 transition-colors hover:bg-[#ff5c00]/20 sm:size-9">
-           <svg
-  width="48"
-  height="48"
-  viewBox="0 0 48 48"
-  fill="none"
-  xmlns="http://www.w3.org/2000/svg"
->
-  <defs>
-    <radialGradient id="blobGradient" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#2A2A2A" />
-      <stop offset="100%" stop-color="#050505" />
-    </radialGradient>
-
-    <filter id="blurGlow" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="2.5" result="coloredBlur" />
-      <feMerge>
-        <feMergeNode in="coloredBlur" />
-        <feMergeNode in="SourceGraphic" />
-      </feMerge>
-    </filter>
-  </defs>
-
-  <path
-    d="M24.5 4C33 4 41 10 42.8 18.5C44.8 28 40.5 39 30.5 42.5C20.8 45.8 9.8 41.2 6 31.5C2.2 22 5.5 10.5 15 6.2C18 4.8 21.2 4 24.5 4Z"
-    fill="url(#blobGradient)"
-    filter="url(#blurGlow)"
-  />
-</svg>
+           <div className="grid size-8 shrink-0 place-items-center rounded-[10px] border border-white/20 bg-white/[0.04] transition-colors hover:bg-white/[0.08] sm:size-9">
+        <Box className="size-5 text-white" />
           </div>
           <div>
             <div className="text-[14px] font-bold tracking-[-0.01em] text-white sm:text-[15px]">
