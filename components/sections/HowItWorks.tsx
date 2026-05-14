@@ -38,9 +38,11 @@ import {
   Globe2,
   Zap,
   Users as UsersIcon,
+  Database,
+  Server,
+  MonitorSmartphone,
+  ShieldAlert,
 } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
 
 const workflowSteps = [
   {
@@ -61,133 +63,179 @@ const workflowSteps = [
   },
 ];
 
-// Reusable premium easing curve for that "shadcn" feel
-const premiumEase = [0.06, 1, 0.3, 1] as const;
-
+// High-fidelity internal UI for the cards
 function StepCardUI({ index }: { index: number }) {
-  // Card 1: Problem Library
+  // 1. Problem Library
   if (index === 0) {
     return (
-      <div className="flex h-full flex-col justify-between space-y-4 rounded-xl border border-white/5 bg-[#16161a] p-6">
-        <h4 className="text-sm font-semibold text-slate-300">Problem Library</h4>
-        <div className="space-y-3">
+      <div className="flex h-full flex-col p-6">
+        <div className="mb-4 flex items-center justify-between border-b border-white/10 pb-4">
+          <h4 className="text-sm font-semibold text-white">Problem Library</h4>
+          <Search className="size-4 text-zinc-500" />
+        </div>
+        <div className="flex-1 space-y-2.5">
           {[
-            { name: "Design Uber", diff: "Hard", color: "text-red-400 bg-red-400/10", time: "45 min" },
-            { name: "Design Twitter Feed", diff: "Hard", color: "text-red-400 bg-red-400/10", time: "60 min" },
-            { name: "Design URL Shortener", diff: "Medium", color: "text-orange-400 bg-orange-400/10", time: "30 min" },
-            { name: "Design Instagram Feed", diff: "Medium", color: "text-orange-400 bg-orange-400/10", time: "50 min" },
+            { name: "Design Uber", diff: "Hard", tone: "text-red-400 bg-red-400/10", time: "45m", icon: Globe2 },
+            { name: "Design Twitter", diff: "Hard", tone: "text-red-400 bg-red-400/10", time: "60m", icon: MessageSquare },
+            { name: "URL Shortener", diff: "Medium", tone: "text-orange-400 bg-orange-400/10", time: "30m", icon: LinkIcon },
+            { name: "Instagram Feed", diff: "Medium", tone: "text-orange-400 bg-orange-400/10", time: "50m", icon: ImageIcon },
+            { name: "Notification Sys", diff: "Medium", tone: "text-orange-400 bg-orange-400/10", time: "40m", icon: Bell },
           ].map((item) => (
-            <div key={item.name} className="flex items-center justify-between rounded-lg border border-white/5 p-3 hover:bg-white/5">
+            <div key={item.name} className="flex cursor-pointer items-center justify-between rounded-lg border border-white/5 bg-white/[0.02] p-3 transition hover:bg-white/[0.04]">
               <div className="flex items-center gap-3">
-                <span className="text-sm font-medium text-slate-200">{item.name}</span>
-                <span className={`rounded px-2 py-0.5 text-[10px] font-bold ${item.color}`}>{item.diff}</span>
+                <div className="grid size-8 place-items-center rounded-md bg-black/40 border border-white/5 text-zinc-400">
+                  <item.icon className="size-4" />
+                </div>
+                <div>
+                  <div className="text-xs font-semibold text-zinc-200">{item.name}</div>
+                  <div className="mt-0.5 text-[10px] text-zinc-500">{item.time} estimated</div>
+                </div>
               </div>
-              <span className="text-sm text-slate-500">{item.time}</span>
+              <span className={`rounded-md px-2 py-1 text-[10px] font-semibold ${item.tone}`}>{item.diff}</span>
             </div>
           ))}
         </div>
-        <p className="mt-4 text-sm font-medium text-orange-500 hover:text-orange-400 cursor-pointer">
-          View all problems →
-        </p>
       </div>
     );
   }
 
-  // Card 2: Build Architecture Canvas Mock
+  // 2. Build Architecture (Canvas Mock)
   if (index === 1) {
     return (
-      <div className="relative flex h-full items-center justify-center rounded-xl border border-white/5 bg-[#0d0d10] p-6 shadow-inner overflow-hidden">
-        {/* Mock Grid Background */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
-        
-        <div className="relative flex flex-col items-center gap-8">
-          <div className="rounded-md border border-orange-500/30 bg-orange-500/10 px-6 py-2 text-sm text-orange-400">Load Balancer</div>
-          <div className="h-8 w-px bg-slate-700"></div>
-          <div className="rounded-md border border-blue-500/30 bg-blue-500/10 px-6 py-2 text-sm text-blue-400">API Gateway</div>
-          <div className="flex gap-8">
-             <div className="flex flex-col items-center gap-6 mt-6">
-                <div className="h-6 w-px bg-slate-700"></div>
-                <div className="rounded-md border border-blue-500/30 bg-blue-500/10 px-6 py-2 text-sm text-blue-400">Auth Service</div>
-                <div className="h-6 w-px bg-slate-700"></div>
-                <div className="rounded-md border border-green-500/30 bg-green-500/10 px-6 py-2 text-sm text-green-400">Redis Cache</div>
-             </div>
-             <div className="flex flex-col items-center gap-6 mt-6">
-                <div className="h-6 w-px bg-slate-700"></div>
-                <div className="rounded-md border border-blue-500/30 bg-blue-500/10 px-6 py-2 text-sm text-blue-400">User Service</div>
-                <div className="h-6 w-px bg-slate-700"></div>
-                <div className="rounded-md border border-purple-500/30 bg-purple-500/10 px-6 py-2 text-sm text-purple-400">PostgreSQL</div>
-             </div>
-          </div>
+      <div className="relative flex h-full items-center justify-center p-6">
+        <div className="absolute inset-0 opacity-[0.15] [background-image:linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] [background-size:24px_24px]" />
+        <div className="relative h-[280px] w-full max-w-[340px]">
+          {/* Edges */}
+          <div className="absolute left-[50%] top-[15%] h-12 w-px bg-white/20" />
+          <div className="absolute left-[30%] top-[40%] h-px w-[40%] bg-white/20" />
+          <div className="absolute left-[30%] top-[40%] h-12 w-px bg-white/20" />
+          <div className="absolute left-[70%] top-[40%] h-12 w-px bg-white/20" />
+          <div className="absolute left-[30%] top-[65%] h-10 w-px bg-white/20" />
+          <div className="absolute left-[70%] top-[65%] h-10 w-px bg-white/20" />
+
+          {/* Nodes */}
+          <MockNode className="left-[50%] top-[10%] text-orange-400" label="Load Balancer" icon={Network} />
+          <MockNode className="left-[50%] top-[35%] text-sky-400" label="API Gateway" icon={Server} />
+          <MockNode className="left-[30%] top-[58%] text-indigo-400" label="Auth Service" icon={ShieldAlert} />
+          <MockNode className="left-[70%] top-[58%] text-indigo-400" label="User Service" icon={UsersIcon} />
+          <MockNode className="left-[30%] top-[82%] text-emerald-400" label="Redis Cache" icon={Database} />
+          <MockNode className="left-[70%] top-[82%] text-violet-400" label="PostgreSQL" icon={Database} />
         </div>
       </div>
     );
   }
 
-  // Card 3: Simulation Mock
+  // 3. Simulation Mock
   if (index === 2) {
     return (
-      <div className="flex h-full flex-col gap-4 rounded-xl border border-white/5 bg-[#16161a] p-6">
-        <div className="flex justify-between items-center">
-           <h4 className="text-sm font-semibold text-slate-300">Simulation in progress</h4>
-           <span className="flex items-center gap-2 text-xs text-green-400 bg-green-400/10 px-2 py-1 rounded-full">
-             <span className="h-1.5 w-1.5 rounded-full bg-green-400 animate-pulse"></span> Live
+      <div className="flex h-full flex-col p-6">
+        <div className="flex items-center justify-between border-b border-white/10 pb-4">
+           <h4 className="text-sm font-semibold text-white">Live Simulation</h4>
+           <span className="flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2 py-0.5 text-[10px] font-medium text-emerald-400">
+             <span className="size-1.5 rounded-full bg-emerald-400 animate-pulse" /> Running
            </span>
         </div>
         
-        <div className="flex-1 rounded-lg border border-white/5 bg-[#0d0d10] p-4 flex items-center justify-center relative">
-           <div className="absolute top-1/2 left-1/4 rounded-md border border-red-500/50 bg-red-500/10 px-4 py-1.5 text-xs text-red-400">High Latency</div>
-           <div className="absolute top-1/3 right-1/4 rounded-md border border-green-500/30 bg-green-500/10 px-4 py-1.5 text-xs text-green-400">Operational</div>
+        {/* Mock Chart */}
+        <div className="mt-4 flex-1 rounded-lg border border-white/5 bg-black/40 p-4 relative overflow-hidden">
+           <div className="absolute top-3 left-3 text-[10px] font-medium text-zinc-500">Traffic (req/s)</div>
+           <div className="absolute top-3 right-3 text-[10px] font-medium text-orange-400">14,203 Spike</div>
+           <div className="absolute inset-x-0 bottom-0 h-24">
+             <svg className="h-full w-full" preserveAspectRatio="none" viewBox="0 0 100 100">
+                <path d="M0,80 L10,75 L20,80 L30,60 L40,65 L50,85 L60,20 L70,30 L80,50 L90,45 L100,50" fill="none" stroke="rgba(249, 115, 22, 0.8)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M0,80 L10,75 L20,80 L30,60 L40,65 L50,85 L60,20 L70,30 L80,50 L90,45 L100,50 L100,100 L0,100 Z" fill="url(#orange-glow)" opacity="0.2" />
+                <defs>
+                  <linearGradient id="orange-glow" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#f97316" />
+                    <stop offset="100%" stopColor="transparent" />
+                  </linearGradient>
+                </defs>
+             </svg>
+           </div>
         </div>
 
-        <div className="h-24 rounded-lg border border-white/5 p-4">
-           <p className="text-xs text-slate-500 mb-2">Traffic (6,432 req/s)</p>
-           {/* Mock line chart using a simple SVG curve */}
-           <svg className="w-full h-8 stroke-blue-500 fill-none" viewBox="0 0 100 20" preserveAspectRatio="none">
-              <path d="M0,20 Q10,5 20,15 T40,10 T60,18 T80,5 T100,10" strokeWidth="2" />
-              <circle cx="80" cy="5" r="2" className="fill-orange-500 stroke-none" />
-           </svg>
+        {/* Mock Logs */}
+        <div className="mt-4 space-y-2">
+           {[
+             { time: "00:14", event: "Traffic spiked to 14k req/s", tone: "text-orange-400" },
+             { time: "00:18", event: "Database connection saturated", tone: "text-red-400" },
+             { time: "00:22", event: "API Gateway latency increased", tone: "text-orange-400" },
+           ].map((log, i) => (
+             <div key={i} className="flex items-center gap-3 rounded-md border border-white/5 bg-white/[0.02] px-3 py-2 text-[11px]">
+               <span className="text-zinc-500">{log.time}</span>
+               <span className={log.tone}>{log.event}</span>
+             </div>
+           ))}
         </div>
       </div>
     );
   }
 
-  // Card 4: Evaluation Score
+  // 4. Evaluation Score
   return (
-    <div className="flex h-full flex-col gap-6 rounded-xl border border-white/5 bg-[#16161a] p-6">
-      <div className="flex items-center gap-8 border-b border-white/5 pb-6">
-         <div className="flex h-24 w-24 items-center justify-center rounded-full border-[6px] border-green-500 text-3xl font-bold text-white shadow-[0_0_15px_rgba(34,197,94,0.2)]">
-            82
-         </div>
-         <div className="flex-1 space-y-3">
-            {[
-              { label: "Reliability", score: "18/20", color: "text-green-400" },
-              { label: "Scalability", score: "16/20", color: "text-green-400" },
-              { label: "Performance", score: "17/20", color: "text-yellow-400" },
-              { label: "Security", score: "15/20", color: "text-yellow-400" },
-            ].map((stat) => (
-              <div key={stat.label} className="flex justify-between text-sm">
-                 <span className="text-slate-400">{stat.label}</span>
-                 <span className={`font-medium ${stat.color}`}>{stat.score}</span>
-              </div>
-            ))}
-         </div>
+    <div className="flex h-full flex-col p-6">
+      <div className="flex items-center justify-between border-b border-white/10 pb-5">
+        <div className="flex items-center gap-4">
+          <div className="relative grid size-16 place-items-center rounded-full border-4 border-zinc-800">
+            <svg className="absolute inset-0 size-full -rotate-90" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="46" fill="none" stroke="#22c55e" strokeWidth="8" strokeDasharray="289" strokeDashoffset="52" strokeLinecap="round" />
+            </svg>
+            <span className="text-xl font-bold text-white">82</span>
+          </div>
+          <div>
+            <div className="text-sm font-bold text-white">System Score</div>
+            <div className="text-[11px] text-zinc-500">Good, but needs optimization</div>
+          </div>
+        </div>
       </div>
-      <div>
-         <h4 className="text-sm font-semibold text-slate-300 mb-3">Detected Issues</h4>
-         <div className="space-y-3">
-            <div className="flex justify-between text-sm">
-               <span className="text-slate-400 flex items-center gap-2"><span className="text-red-500">●</span> Single Point of Failure</span>
-               <span className="text-red-500">High</span>
+      
+      <div className="mt-5 grid grid-cols-2 gap-3">
+        {[
+          { label: "Reliability", score: "18/20", color: "text-emerald-400" },
+          { label: "Scalability", score: "16/20", color: "text-emerald-400" },
+          { label: "Performance", score: "17/20", color: "text-orange-400" },
+          { label: "Security", score: "15/20", color: "text-orange-400" },
+        ].map((stat) => (
+          <div key={stat.label} className="rounded-lg border border-white/5 bg-black/20 p-3">
+             <div className="text-[10px] text-zinc-500">{stat.label}</div>
+             <div className={`mt-1 text-sm font-semibold ${stat.color}`}>{stat.score}</div>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-6">
+         <h4 className="text-xs font-semibold text-zinc-300 mb-3">Detected Issues</h4>
+         <div className="space-y-2">
+            <div className="flex items-center justify-between rounded-md border border-red-500/20 bg-red-500/10 px-3 py-2 text-[11px]">
+               <span className="flex items-center gap-2 text-zinc-200"><ServerCrash className="size-3 text-red-400"/> Single Point of Failure</span>
+               <span className="text-red-400 font-medium">High</span>
             </div>
-            <div className="flex justify-between text-sm">
-               <span className="text-slate-400 flex items-center gap-2"><span className="text-yellow-500">●</span> Missing Cache Layer</span>
-               <span className="text-yellow-500">Medium</span>
+            <div className="flex items-center justify-between rounded-md border border-orange-500/20 bg-orange-500/10 px-3 py-2 text-[11px]">
+               <span className="flex items-center gap-2 text-zinc-200"><Database className="size-3 text-orange-400"/> Missing Cache Layer</span>
+               <span className="text-orange-400 font-medium">Medium</span>
             </div>
          </div>
       </div>
     </div>
   );
 }
+
+function MockNode({ className, label, icon: Icon, tone }: any) {
+  return (
+    <div className={`absolute flex w-24 -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-1.5 ${className}`}>
+      <div className="grid size-10 place-items-center rounded-xl border border-white/10 bg-black text-inherit shadow-lg">
+        <Icon className="size-5" />
+      </div>
+      <span className="text-[9px] font-medium text-zinc-300">{label}</span>
+    </div>
+  );
+}
+
+
+/* =========================================================================
+   HOW IT WORKS SECTION 
+   Refactored for perfect sizing, constrained width, and premium dark cards.
+   ========================================================================= */
 
 export function HowItWorks() {
   const [activeStep, setActiveStep] = useState(0);
@@ -249,499 +297,124 @@ export function HowItWorks() {
     <section
       ref={sectionRef}
       id="how-it-works"
-      // Switching the whole section to match the image's dark theme looks cleaner
-      className="relative bg-[#09090b] px-4 py-16 text-white sm:px-6 lg:h-[430vh] lg:px-10 lg:py-0"
+      className="relative bg-[#050505] px-4 py-16 text-white sm:px-6 lg:h-[400vh] lg:py-0"
     >
-      <div className="mx-auto max-w-[1440px] lg:sticky lg:top-0 lg:flex lg:min-h-screen lg:flex-col lg:justify-center lg:py-24">
-        <div className="mx-auto max-w-[740px] text-center">
-          <p className="text-xs font-bold uppercase tracking-[0.08em] text-orange-500 sm:text-sm">
+      {/* 
+        CRITICAL FIX: 
+        Constrained max-w-[1080px] instead of full width. 
+        Centered with mx-auto to leave perfectly proportioned space left and right.
+      */}
+      <div className="mx-auto max-w-[1080px] lg:sticky lg:top-0 lg:flex lg:h-screen lg:flex-col lg:justify-center lg:py-16">
+        
+        {/* Centered Mobile/Tablet Header */}
+        <div className="mx-auto max-w-[640px] text-center lg:mb-12 lg:text-left lg:mx-0">
+          <p className="text-xs font-bold uppercase tracking-[0.08em] text-[#ff5c00] sm:text-sm">
             How It Works
           </p>
-          <h2 className="mt-4 text-3xl font-extrabold leading-[1.06] tracking-[-0.055em] text-white sm:text-4xl lg:mt-5 lg:text-5xl">
+          <h2 className="mt-3 text-3xl font-extrabold leading-[1.08] tracking-[-0.045em] text-white sm:text-4xl lg:mt-4 lg:text-[42px]">
             Simple workflow. Deep practice.
           </h2>
-          <p className="mx-auto mt-4 max-w-[560px] text-sm leading-7 text-slate-400 sm:text-base lg:mt-5 lg:text-lg lg:leading-8">
-            From picking a problem to getting evaluated — everything you need to master system design.
-          </p>
         </div>
 
-        <div className="mt-10 grid gap-4 lg:hidden">
+        {/* 
+          MOBILE LAYOUT: Simple stacked cards 
+        */}
+        <div className="mt-10 grid gap-6 lg:hidden">
           {workflowSteps.map((step, index) => (
-            <article
-              key={step.title}
-              className="overflow-hidden rounded-2xl border border-white/10 bg-[#0e0e11] p-4 shadow-[0_20px_60px_rgba(0,0,0,0.28)]"
-            >
-              <div className="mb-4 flex items-center gap-3">
-                <span className="grid size-9 place-items-center rounded-xl border border-orange-500/30 bg-orange-500/10 text-sm font-bold text-orange-500">
-                  {String(index + 1).padStart(2, "0")}
+            <article key={step.title} className="flex flex-col gap-4">
+              <div className="flex items-center gap-3 px-2">
+                <span className="grid size-8 place-items-center rounded-lg border border-[#ff5c00]/30 bg-[#ff5c00]/10 text-xs font-bold text-[#ff5c00]">
+                  0{index + 1}
                 </span>
-                <h3 className="text-lg font-bold tracking-[-0.02em] text-white">{step.title}</h3>
+                <h3 className="text-base font-bold text-white">{step.title}</h3>
               </div>
-              <p className="text-sm leading-6 text-slate-400">{step.text}</p>
-              <div className="mt-5 h-[250px] overflow-hidden rounded-xl sm:h-[300px]">
-                <StepCardUI index={index} />
+              <p className="px-2 text-sm text-zinc-400">{step.text}</p>
+              
+              {/* Mobile Premium Card */}
+              <div className="relative h-[380px] overflow-hidden rounded-[16px] border border-white/[0.09] bg-[#050505] [background-image:linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.015))] shadow-[inset_0_1px_0_rgba(255,255,255,0.07),0_24px_80px_rgba(0,0,0,0.4)]">
+                 <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/35 to-transparent" />
+                 <StepCardUI index={index} />
               </div>
             </article>
           ))}
         </div>
 
-        <div className="mt-16 hidden gap-10 lg:grid lg:grid-cols-[400px_1fr] lg:items-center">
-          <aside className="hidden lg:block">
-            <div className="relative pl-16">
-              <div className="absolute left-6 top-7 h-[calc(100%-56px)] w-px bg-white/10" />
-              <div
-                className="absolute left-6 top-7 w-px bg-orange-500"
-                style={{ height: `${scrollProgress * 100}%` }}
-              />
+        {/* 
+          DESKTOP LAYOUT: Left navigation, Right fixed sticky-card 
+          Grid uses tighter proportions (380px left menu, remaining space right)
+        */}
+        <div className="hidden lg:grid lg:grid-cols-[360px_1fr] lg:items-center lg:gap-16 xl:grid-cols-[400px_1fr]">
+          
+          {/* Left Navigation */}
+          <aside className="relative">
+            <div className="absolute left-[22px] top-6 h-[calc(100%-48px)] w-px bg-white/10" />
+            <div
+              className="absolute left-[22px] top-6 w-px bg-[#ff5c00]"
+              style={{ height: `${scrollProgress * 100}%` }}
+            />
 
-              <div className="space-y-8">
-                {workflowSteps.map((step, index) => {
-                  const active = activeStep === index;
-                  const complete = activeStep > index;
-                  return (
-                    <button
-                      key={step.title}
-                      type="button"
-                      onClick={() => scrollToStep(index)}
-                      className={`relative w-full rounded-xl p-6 text-left transition-all ${
-                        active ? "bg-white/5" : "bg-transparent hover:bg-white/[0.02]"
+            <div className="space-y-6">
+              {workflowSteps.map((step, index) => {
+                const active = activeStep === index;
+                const complete = activeStep > index;
+                return (
+                  <button
+                    key={step.title}
+                    type="button"
+                    onClick={() => scrollToStep(index)}
+                    className={`relative w-full rounded-xl py-4 pl-16 pr-4 text-left transition-all ${
+                      active ? "bg-white/[0.03]" : "bg-transparent hover:bg-white/[0.02]"
+                    }`}
+                  >
+                    <span
+                      className={`absolute left-0 top-[18px] grid size-11 place-items-center rounded-full border-2 bg-[#050505] text-sm font-bold transition-all ${
+                        active || complete
+                          ? "border-[#ff5c00] text-[#ff5c00] shadow-[0_0_0_4px_rgba(255,92,0,0.1)]"
+                          : "border-white/10 text-zinc-500"
                       }`}
                     >
-                      <span
-                        className={`absolute -left-[66px] top-6 grid size-10 place-items-center rounded-full border-2 bg-[#09090b] text-sm font-bold transition-all ${
-                          active || complete
-                            ? "border-orange-500 text-orange-500 shadow-[0_0_0_4px_rgba(234,88,12,0.1)]"
-                            : "border-white/20 text-slate-500"
-                        }`}
-                      >
-                        {String(index + 1).padStart(2, "0")}
-                      </span>
-                      <h3 className="text-base font-bold text-white">{step.title}</h3>
-                      <p className="mt-4 text-[15px] leading-7 text-slate-400">{step.text}</p>
-                    </button>
-                  );
-                })}
-              </div>
+                      0{index + 1}
+                    </span>
+                    <h3 className={`text-base font-bold transition-colors ${active ? "text-white" : "text-zinc-300"}`}>
+                      {step.title}
+                    </h3>
+                    <p className={`mt-2 text-sm leading-6 transition-colors ${active ? "text-zinc-400" : "text-zinc-500"}`}>
+                      {step.text}
+                    </p>
+                  </button>
+                );
+              })}
             </div>
           </aside>
 
-          {/* THE FIX: Relative container with fixed height, cards absolute positioned inside */}
-          <div className="relative h-[600px] w-full overflow-hidden rounded-2xl">
+          {/* Right Floating Card Stack (Sleek, constrained size) */}
+          <div className="relative mx-auto h-[440px] w-full max-w-[540px]">
             {workflowSteps.map((step, index) => {
               const isActive = activeStep === index;
               return (
                 <div
                   key={index}
-                  className={`absolute inset-0 w-full h-full p-4 transition-all duration-500 ease-in-out ${
+                  className={`absolute inset-0 h-full w-full transition-all duration-500 ease-in-out ${
                     isActive
-                      ? "opacity-100 translate-y-0 z-10 pointer-events-auto"
-                      : "opacity-0 translate-y-8 z-0 pointer-events-none"
+                      ? "opacity-100 translate-y-0 z-10 pointer-events-auto scale-100"
+                      : "opacity-0 translate-y-8 z-0 pointer-events-none scale-95"
                   }`}
                 >
-                  <div className="h-full w-full rounded-2xl bg-[#0e0e11] border border-white/10 p-6 shadow-2xl">
-                     <div className="mb-6 flex justify-between">
-                        <span className="text-3xl font-bold text-orange-500">{String(index + 1).padStart(2, "0")}</span>
-                     </div>
-                     <h3 className="text-2xl font-bold text-white mb-2">{step.title}</h3>
-                     <p className="text-slate-400 mb-8">{step.text}</p>
+                  {/* Premium Feature Card Wrapper */}
+                  <div className="relative h-full w-full overflow-hidden rounded-[16px] border border-white/[0.09] bg-[#050505] [background-image:linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.015))] shadow-[inset_0_1px_0_rgba(255,255,255,0.07),0_24px_80px_rgba(0,0,0,0.4)]">
+                     {/* Glossy top border & radial glow */}
+                     <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_80%_0%,rgba(255,255,255,0.05),transparent_28%)]" />
+                     <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
                      
-                     {/* Render the specific inner UI mock for this card */}
-                     <div className="h-[300px]">
-                        <StepCardUI index={index} />
-                     </div>
+                     <StepCardUI index={index} />
                   </div>
                 </div>
               );
             })}
           </div>
+
         </div>
       </div>
     </section>
-  );
-}
-
-function WorkflowSectionEdge({ position }: { position: "top" | "bottom" }) {
-  const isTop = position === "top";
-
-  return (
-    <svg
-      className={`pointer-events-none absolute inset-x-0 ${isTop ? "top-0" : "bottom-0"} z-10 h-12 w-full text-slate-300/80`}
-      preserveAspectRatio="none"
-      viewBox="0 0 1200 48"
-      aria-hidden="true"
-    >
-      <path
-        d={isTop ? "M0 1H468L490 28H710L732 1H1200" : "M0 47H468L490 20H710L732 47H1200"}
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1"
-      />
-    </svg>
-  );
-}
-
-function WorkflowStepCard({
-  index,
-  progress,
-}: {
-  index: number;
-  title: string;
-  text: string;
-  progress: number;
-}) {
-  const stackProgress = progress * (workflowSteps.length - 1);
-  const offset = index - stackProgress;
-  const translateY = Math.max(0, offset * 96) + Math.min(0, offset * 18);
-  const scale = 1 - Math.max(0, -offset) * 0.025;
-  const opacity = offset > 1.1 ? 0 : 1;
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.7, ease: premiumEase }}
-      className="min-w-[86vw] snap-center sm:min-w-[680px] lg:absolute lg:inset-0 lg:min-w-0 lg:will-change-transform"
-      style={{
-        zIndex: index + 1,
-        transform: `translateY(${translateY}px) scale(${scale})`,
-        opacity,
-      }}
-    >
-      <WorkflowInterviewPanel step={index} />
-    </motion.div>
-  );
-}
-
-function WorkflowInterviewPanel({ step }: { step: number }) {
-  const activeProblem = [
-    "Design Instagram Feed",
-    "Design Uber Backend",
-    "Traffic Spike Simulation",
-    "Architecture Report",
-  ][step];
-
-  return (
-    <div className="rounded-[18px] border border-slate-200 bg-white/86 p-6 shadow-[0_24px_80px_rgba(15,23,42,0.12),0_0_0_1px_rgba(255,255,255,0.8)] backdrop-blur-xl">
-      <div className="rounded-[14px] border border-slate-200 bg-white p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]">
-        <div className="grid min-h-[430px] gap-8 lg:grid-cols-[310px_1fr]">
-          <div className="border-b border-slate-200 pb-8 lg:border-b-0 lg:border-r lg:pb-0 lg:pr-8">
-            <div className="mb-5 flex items-center justify-between">
-              <h3 className="text-base font-bold text-[#080b18]">Problem Library</h3>
-              <span className="grid size-9 place-items-center rounded-lg bg-[#f3edff] text-[#7c3cff]">
-                {step === 0 ? <ImageIcon className="size-5" /> : step === 1 ? <Network className="size-5" /> : step === 2 ? <Activity className="size-5" /> : <Gauge className="size-5" />}
-              </span>
-            </div>
-            <div className="mb-4 flex h-10 items-center rounded-lg border border-slate-200 px-3 text-sm text-slate-400">
-              Search problems...
-              <Search className="ml-auto size-4" />
-            </div>
-            {[
-              ["Design Twitter Feed", "Hard"],
-              ["Design Uber Backend", "Hard"],
-              ["Design Instagram Feed", "Medium"],
-              ["Design URL Shortener", "Medium"],
-              ["Design Chat System", "Medium"],
-            ].map(([name, difficulty]) => {
-              const selected = name === activeProblem || (step > 1 && name === "Design Instagram Feed");
-              return (
-                <div
-                  key={name}
-                  className={`mb-3 flex items-center justify-between rounded-lg border px-3 py-4 text-sm transition ${
-                    selected
-                      ? "border-[#8b5cf6] bg-[#fbf8ff] text-[#080b18] shadow-[0_12px_30px_rgba(124,60,255,0.12)]"
-                      : "border-transparent bg-slate-50 text-slate-700"
-                  }`}
-                >
-                  <span className="font-semibold">{name}</span>
-                  <span className={`rounded-md px-2 py-1 text-xs font-semibold ${difficulty === "Hard" ? "bg-red-50 text-[#7c3cff]" : "bg-[#f1e8ff] text-[#7c3cff]"}`}>
-                    {difficulty}
-                  </span>
-                  {selected && <ChevronRight className="size-4 text-[#7c3cff]" />}
-                </div>
-              );
-            })}
-          </div>
-
-          <div className="flex flex-col">
-            <div className="flex flex-wrap items-center gap-4">
-              <div className="grid size-11 place-items-center rounded-lg bg-[#7c3cff] text-white">
-                {step === 2 ? <Activity className="size-5" /> : step === 3 ? <Gauge className="size-5" /> : <ImageIcon className="size-5" />}
-              </div>
-              <h3 className="text-xl font-bold text-[#080b18]">
-                {step === 1 ? "Build Uber Backend" : step === 2 ? "Run Traffic Simulation" : step === 3 ? "Get Evaluated" : "Design Instagram Feed"}
-              </h3>
-              <span className="ml-auto rounded-lg bg-[#f1e8ff] px-3 py-1 text-sm font-semibold text-[#7c3cff]">
-                {step === 3 ? "82/100" : "Medium"}
-              </span>
-            </div>
-
-            <p className="mt-5 max-w-2xl text-base leading-7 text-slate-600">
-              {step === 0 &&
-                "Design the backend for Instagram feed. The system should be able to support millions of users and high read volume."}
-              {step === 1 &&
-                "Place core services, connect traffic paths, and model the data flow before you ever run an evaluation."}
-              {step === 2 &&
-                "Watch traffic spikes, database pressure, and latency events play through the architecture in real time."}
-              {step === 3 &&
-                "Review score breakdowns, bottlenecks, missing components, and concrete next steps for improving the design."}
-            </p>
-
-            {step < 2 && (
-              <div className="mt-8 grid gap-3 sm:grid-cols-4">
-                {[
-                  [UsersIcon, "Users", "100M+"],
-                  [TrendingUp, "Read QPS", "1M+"],
-                  [ImageIcon, "Media", "Photos & Videos"],
-                  [Globe2, "Regions", "Global"],
-                ].map(([Icon, label, value]) => (
-                  <div key={String(label)} className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-                    <div className="mb-4 grid size-8 place-items-center rounded-lg bg-[#f1e8ff] text-[#7c3cff]">
-                      <Icon className="size-4" />
-                    </div>
-                    <div className="text-sm text-slate-500">{label as string}</div>
-                    <div className="mt-1 text-sm font-bold text-[#080b18]">{value as string}</div>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {step === 2 && <LightSimulationPanel />}
-            {step === 3 && <LightEvaluationPanel />}
-
-            <div className="mt-8">
-              <div className="mb-4 text-sm font-bold text-[#080b18]">
-                {step === 2 ? "Simulation Events" : step === 3 ? "Actionable Issues" : "Requirements"}
-              </div>
-              <div className="space-y-3 text-sm text-slate-700">
-                {[
-                  "Users can post photos and videos.",
-                  "Users can follow/unfollow other users.",
-                  "Users can like and comment on posts.",
-                  "The feed should be personalized and real-time.",
-                ].map((item) => (
-                  <div key={item} className="flex items-center gap-3">
-                    <Check className="size-4 rounded-full border border-[#7c3cff] p-0.5 text-[#7c3cff]" />
-                    {item}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <Button
-              asChild
-              className="mt-auto h-12 self-end rounded-lg bg-[#070b18] px-8 font-semibold text-white shadow-[0_16px_35px_rgba(7,11,24,0.2)] hover:bg-[#111827]"
-            >
-              <Link href="/problems">
-                Start Problem <ArrowRight className="ml-2 size-4" />
-              </Link>
-            </Button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function LightSimulationPanel() {
-  return (
-    <div className="mt-8 rounded-xl border border-slate-200 bg-slate-50 p-4">
-      <div className="flex items-center gap-3 text-xs">
-        <span className="rounded-md bg-white px-3 py-2 font-semibold text-slate-700">Users</span>
-        <span className="h-px flex-1 bg-emerald-400" />
-        <span className="rounded-md bg-white px-3 py-2 font-semibold text-slate-700">API Gateway</span>
-        <span className="h-px flex-1 bg-red-400" />
-        <span className="rounded-md bg-red-50 px-3 py-2 font-semibold text-red-500">Database</span>
-      </div>
-      <div className="mt-5 space-y-3 text-sm text-slate-600">
-        {["00:00 Simulation started", "00:12 Traffic spike", "00:24 Database crash"].map((item) => (
-          <div key={item} className="flex items-center justify-between">
-            <span>{item}</span>
-            <span className="h-px w-28 bg-[#7c3cff]" />
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function LightEvaluationPanel() {
-  return (
-    <div className="mt-8 grid gap-5 sm:grid-cols-[120px_1fr]">
-      <div className="grid size-28 place-items-center rounded-full border-[8px] border-[#7c3cff] text-center">
-        <div>
-          <div className="text-4xl font-bold text-[#080b18]">82</div>
-          <div className="text-xs text-slate-500">/100</div>
-        </div>
-      </div>
-      <div className="space-y-3 text-sm text-slate-600">
-        {["Reliability 18/20", "Scalability 16/20", "Performance 17/20", "Security 15/20"].map((item) => (
-          <div key={item} className="flex items-center justify-between rounded-lg bg-slate-50 px-3 py-2">
-            <span>{item.split(" ")[0]}</span>
-            <span className="font-semibold text-[#7c3cff]">{item.split(" ")[1]}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function WorkflowProblemPreview() {
-  return (
-    <div className="ml-auto w-full max-w-[360px] rounded-xl border border-white/10 bg-[#101113]/80 p-4 shadow-2xl">
-      <div className="mb-4 flex items-center justify-between text-sm font-semibold text-white">
-        Problem Library
-        <Box className="size-4 text-zinc-500" />
-      </div>
-      {[
-        ["Design Uber", "Hard", "45 min", "text-red-300 bg-red-500/15"],
-        ["Design Twitter Feed", "Hard", "60 min", "text-red-300 bg-red-500/15"],
-        ["Design URL Shortener", "Medium", "30 min", "text-amber-300 bg-amber-500/15"],
-        ["Design Instagram Feed", "Medium", "50 min", "text-amber-300 bg-amber-500/15"],
-      ].map(([name, difficulty, time, tone]) => (
-        <div key={name} className="mb-3 flex items-center justify-between rounded-lg border border-white/8 bg-black/20 px-3 py-3 text-sm last:mb-0">
-          <span className="text-white">{name}</span>
-          <span className={`rounded px-2 py-0.5 text-xs ${tone}`}>{difficulty}</span>
-          <span className="text-zinc-500">{time}</span>
-        </div>
-      ))}
-      <Link href="/problems" className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[#ff5c00]">
-        View all problems <ArrowRight className="size-4" />
-      </Link>
-    </div>
-  );
-}
-
-function WorkflowArchitecturePreview() {
-  return (
-    <div className="relative min-h-[360px] overflow-hidden rounded-xl border border-white/10 bg-black/15">
-      <div className="absolute inset-0 opacity-[0.18] [background-image:linear-gradient(rgba(255,255,255,0.12)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.12)_1px,transparent_1px)] [background-size:32px_32px]" />
-      <div className="absolute left-6 top-8 grid gap-3 rounded-lg border border-white/10 bg-white/[0.035] p-3">
-        {[Network, Box, Clock, LinkIcon, MessageSquare].map((Icon, index) => (
-          <div key={index} className="grid size-9 place-items-center rounded-md text-zinc-300">
-            <Icon className="size-5" />
-          </div>
-        ))}
-      </div>
-      <FeatureNode className="left-[55%] top-[12%] border-orange-500/50 text-orange-300" label="Load Balancer" />
-      <FeatureNode className="left-[55%] top-[34%] border-sky-500/50 text-sky-300" label="API Gateway" />
-      <FeatureNode className="left-[38%] top-[55%] border-sky-500/50 text-sky-300" label="User Service" />
-      <FeatureNode className="left-[73%] top-[55%] border-sky-500/50 text-sky-300" label="User Service" />
-      <FeatureNode className="left-[38%] top-[78%] border-emerald-500/50 text-emerald-300" label="Redis Cache" />
-      <FeatureNode className="left-[73%] top-[78%] border-violet-500/50 text-violet-300" label="PostgreSQL" />
-      <div className="absolute left-[55%] top-[22%] h-10 w-px bg-white/30" />
-      <div className="absolute left-[55%] top-[44%] h-px w-[18%] bg-white/25" />
-      <div className="absolute left-[38%] top-[44%] h-px w-[18%] bg-white/25" />
-      <div className="absolute left-[38%] top-[64%] h-12 w-px bg-white/25" />
-      <div className="absolute left-[73%] top-[64%] h-12 w-px bg-white/25" />
-    </div>
-  );
-}
-
-function WorkflowSimulationPreview() {
-  return (
-    <div className="rounded-xl border border-white/10 bg-black/20 p-5">
-      <div className="mb-5 flex items-center justify-end gap-2 text-sm font-semibold text-emerald-400">
-        <span className="size-2 rounded-full bg-emerald-400" />
-        Live
-      </div>
-      <div className="mb-6 flex items-center gap-3 text-xs">
-        <FeaturePill label="Users" />
-        <div className="h-px flex-1 bg-emerald-500/40" />
-        <FeaturePill tone="border-orange-500/50 text-orange-300" label="Load Balancer" />
-        <div className="h-px flex-1 bg-sky-500/40" />
-        <FeaturePill tone="text-sky-300" label="API Gateway" />
-        <div className="h-px flex-1 bg-red-500/60" />
-        <FeaturePill tone="border-red-500/50 text-red-300" label="Database" />
-        <span className="text-xs font-semibold text-red-500">CRASHED</span>
-      </div>
-      <div className="space-y-5 text-sm text-zinc-300">
-        {[
-          ["00:00", "Simulation started", "bg-zinc-600"],
-          ["00:12", "Traffic spike", "bg-red-500"],
-          ["00:24", "Database crash", "bg-red-500"],
-          ["00:32", "Latency spike", "bg-orange-400"],
-        ].map(([time, label, tone]) => (
-          <div key={label} className="grid grid-cols-[56px_1fr_180px] items-center gap-5">
-            <span className="text-zinc-500">{time}</span>
-            <span>{label}</span>
-            <span className={`h-px ${tone}`} />
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function WorkflowEvaluationPreview() {
-  return (
-    <div className="ml-auto w-full max-w-[420px] rounded-xl border border-white/10 bg-[#101113]/85 p-6 shadow-2xl">
-      <div className="grid grid-cols-[120px_1fr] gap-7">
-        <div className="grid size-28 place-items-center rounded-full border-[8px] border-emerald-400 text-center">
-          <div>
-            <div className="text-4xl font-bold text-white">82</div>
-            <div className="text-xs text-zinc-500">/100</div>
-          </div>
-        </div>
-        <div className="space-y-3 text-sm text-zinc-300">
-          {[
-            ["Reliability", "18/20", "text-emerald-400"],
-            ["Scalability", "16/20", "text-emerald-400"],
-            ["Performance", "17/20", "text-amber-400"],
-            ["Security", "15/20", "text-orange-400"],
-            ["Best Practices", "16/20", "text-amber-400"],
-          ].map(([label, value, tone]) => (
-            <div key={label} className="flex justify-between gap-5">
-              <span>{label}</span>
-              <span className={tone}>{value}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-      <div className="mt-7 text-sm font-semibold text-white">Detected Issues</div>
-      <div className="mt-4 space-y-3 text-sm">
-        {[
-          ["Single Point of Failure (Database)", "High", "text-red-400"],
-          ["Missing Cache Layer", "Medium", "text-amber-400"],
-          ["No Rate Limiting", "Low", "text-emerald-400"],
-        ].map(([issue, level, tone]) => (
-          <div key={issue} className="flex justify-between gap-5 text-zinc-300">
-            <span>{issue}</span>
-            <span className={tone}>{level}</span>
-          </div>
-        ))}
-      </div>
-      <Link href="/problems" className="mt-7 inline-flex items-center gap-2 text-sm font-semibold text-[#ff5c00]">
-        View full report <ArrowRight className="size-4" />
-      </Link>
-    </div>
-  );
-}
-
-function FeatureNode({
-  className,
-  label,
-}: {
-  className: string;
-  label: string;
-}) {
-  return (
-    <div className={`absolute grid h-12 w-32 -translate-x-1/2 place-items-center rounded-lg border bg-black/35 text-xs font-medium ${className}`}>
-      {label}
-    </div>
-  );
-}
-
-function FeaturePill({
-  label,
-  tone = "text-white",
-}: {
-  label: string;
-  tone?: string;
-}) {
-  return (
-    <span className={`rounded-lg border border-white/10 bg-black/35 px-4 py-3 text-xs font-medium ${tone}`}>
-      {label}
-    </span>
   );
 }

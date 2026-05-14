@@ -180,18 +180,6 @@ function DarkFeatureCard({
 }
 
 export function ProblemLibrary() {
-  const carouselRef = useRef<HTMLDivElement | null>(null);
-
-  const scrollCarousel = (direction: "left" | "right") => {
-    const carousel = carouselRef.current;
-    if (!carousel) return;
-
-    carousel.scrollBy({
-      left: direction === "left" ? -carousel.clientWidth * 0.86 : carousel.clientWidth * 0.86,
-      behavior: "smooth",
-    });
-  };
-
   return (
     <section id="problems" className="relative isolate overflow-hidden border-t border-white/5 bg-[#050505] px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
       <div
@@ -207,11 +195,11 @@ export function ProblemLibrary() {
       <div className="pointer-events-none absolute left-[12%] top-20 z-0 size-[300px] rounded-full bg-blue-500/5 blur-[100px] sm:size-[420px] sm:blur-[120px]" />
       <div className="pointer-events-none absolute right-[10%] top-10 z-0 size-[340px] rounded-full bg-white/[0.035] blur-[110px] sm:size-[520px] sm:blur-[130px]" />
 
-      <div className="relative z-10 mx-auto grid max-w-[1180px] items-start gap-10 lg:grid-cols-[320px_1fr] xl:grid-cols-[360px_1fr]">
+      <div className="relative z-10 mx-auto grid max-w-[1180px] items-center gap-14 lg:grid-cols-[320px_1fr] xl:grid-cols-[360px_1fr]">
         
-        {/* LEFT COLUMN: Sticky Header Content */}
+        {/* LEFT COLUMN: Header Content */}
         <div className="flex min-w-0 flex-col items-start lg:sticky lg:top-24">
-          <div className="mb-5 flex items-center gap-2.5 text-xs font-semibold uppercase tracking-[0.13em] text-[#ff5c00]">
+          <div className="mb-4 flex items-center gap-2.5 text-xs font-semibold uppercase tracking-[0.13em] text-[#ff5c00] sm:mb-5">
             <Box className="size-4" />
             PROBLEM LIBRARY
           </div>
@@ -220,9 +208,9 @@ export function ProblemLibrary() {
             <span className="text-[#ff5c00]">25+</span> Real Interview Problems, Ready to Solve.
           </h2>
 
-          <p className="mt-5 max-w-[520px] text-sm leading-7 text-zinc-400 sm:text-base lg:max-w-[360px]">
+          <p className="mt-4 max-w-[520px] text-sm leading-7 text-zinc-400 sm:mt-5 sm:text-base lg:max-w-[360px]">
             These are the exact problems asked at FAANG — Uber, Twitter, WhatsApp, Netflix, URL Shortener, Pastebin, Instagram Feed, Notification System, and more.
-            <br />
+            <br className="hidden sm:block" />
             Each with difficulty tags.
           </p>
 
@@ -234,7 +222,7 @@ export function ProblemLibrary() {
               >
                 <stat.icon className={`mb-2 size-4 ${stat.tone}`} />
                 <div className="text-xl font-semibold tracking-[-0.03em] text-white">{stat.value}</div>
-                <div className="mt-1 text-xs leading-5 text-zinc-500">{stat.label}</div>
+                <div className="mt-1 text-[11px] leading-5 text-zinc-500 sm:text-xs">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -255,120 +243,31 @@ export function ProblemLibrary() {
             </div>
           </div>
 
-          <div className="mt-8 hidden w-full lg:flex">
+          {/* Action Button - Always visible on all screens */}
+          <div className="mt-8 flex w-full">
             <Link
               href="/problems"
-              className="group flex h-14 w-full max-w-[310px] items-center justify-center gap-3 rounded-[12px] border border-white/[0.08] bg-white/[0.025] text-base font-semibold text-[#ff5c00] shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] transition hover:border-[#ff5c00]/35 hover:bg-[#ff5c00]/5"
+              className="group flex h-12 w-full max-w-[310px] items-center justify-center gap-3 rounded-[12px] border border-white/[0.08] bg-white/[0.025] text-sm font-semibold text-[#ff5c00] shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] transition hover:border-[#ff5c00]/35 hover:bg-[#ff5c00]/5 sm:h-14 sm:text-base"
             >
               View all 25 problems
-              <ArrowRight className="size-5 transition-transform group-hover:translate-x-1" />
+              <ArrowRight className="size-4 transition-transform group-hover:translate-x-1 sm:size-5" />
             </Link>
           </div>
         </div>
 
-        {/* RIGHT COLUMN: Orbit on desktop, carousel on smaller screens */}
-        <div className="hidden min-w-0 lg:block">
+        {/* RIGHT COLUMN: Responsive Orbit displays on all devices */}
+        <div className="mt-6 flex w-full justify-center lg:mt-0 lg:block">
           <ProblemOrbit />
         </div>
 
-        <div className="min-w-0 lg:hidden">
-          <div className="mb-3 flex items-center justify-between sm:hidden">
-            <p className="text-xs font-medium text-zinc-500">Swipe or use arrows</p>
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                aria-label="Previous problem"
-                onClick={() => scrollCarousel("left")}
-                className="grid size-9 place-items-center rounded-full border border-white/10 bg-white/[0.04] text-white/80 transition hover:bg-white/[0.08]"
-              >
-                <ChevronLeft className="size-4" />
-              </button>
-              <button
-                type="button"
-                aria-label="Next problem"
-                onClick={() => scrollCarousel("right")}
-                className="grid size-9 place-items-center rounded-full border border-white/10 bg-white/[0.04] text-white/80 transition hover:bg-white/[0.08]"
-              >
-                <ChevronRight className="size-4" />
-              </button>
-            </div>
-          </div>
-
-          <div
-            ref={carouselRef}
-            className="-mx-4 flex min-w-0 snap-x snap-mandatory gap-3.5 overflow-x-auto px-4 pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:grid md:grid-cols-2 md:overflow-visible md:px-0 md:pb-0"
-          >
-            {problemData.map((problem, i) => (
-              <motion.article
-                initial={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.45, delay: i * 0.03 }}
-                key={problem.title}
-                className="group relative flex min-h-[190px] w-[82vw] max-w-[340px] shrink-0 snap-center cursor-pointer flex-col overflow-hidden rounded-[12px] border border-white/[0.11] bg-[linear-gradient(180deg,rgba(255,255,255,0.075),rgba(255,255,255,0.025))] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_18px_45px_rgba(0,0,0,0.28)] backdrop-blur-sm transition-all hover:-translate-y-1 hover:border-white/18 hover:bg-white/[0.065] md:min-h-[208px] md:w-auto md:max-w-none md:p-5"
-              >
-                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/45 to-transparent opacity-70" />
-
-                <div className="flex min-w-0 items-start justify-between gap-3">
-                  <div className="flex min-w-0 items-start gap-3.5">
-                    <div className={`grid size-12 shrink-0 place-items-center rounded-[10px] border text-zinc-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] sm:size-14 ${problem.iconTone}`}>
-                      {problem.brand ? (
-                        <span className={problem.brand === "N" ? "text-3xl font-black tracking-[-0.08em]" : "text-base font-medium tracking-[-0.08em]"}>
-                          {problem.brand}
-                        </span>
-                      ) : (
-                        problem.icon && <problem.icon className="size-6 sm:size-7" />
-                      )}
-                    </div>
-                    
-                    <div className="min-w-0">
-                      <h3 className="max-w-full text-base font-semibold leading-5 tracking-[-0.02em] text-white/95 transition-colors group-hover:text-white sm:text-[17px] sm:leading-6">
-                        {problem.title}
-                      </h3>
-                      <div className={`mt-2 w-fit rounded-[6px] border px-2 py-1 text-xs font-medium leading-none ${problem.diffColor}`}>
-                        {problem.difficulty}
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <ChevronRight className="mt-1 size-4 shrink-0 text-zinc-300 transition-transform group-hover:translate-x-1 group-hover:text-white" />
-                </div>
-
-                <p className="mt-4 min-h-[58px] text-[13px] leading-6 text-zinc-300/80 sm:mt-5">
-                  {problem.description}
-                </p>
-
-                <div className="mt-auto flex min-w-0 items-center gap-3 border-t border-white/10 pt-3.5 text-xs font-medium text-zinc-300/80">
-                  <div className="flex shrink-0 items-center gap-1.5">
-                    <Clock className="size-4" />
-                    {problem.time}
-                  </div>
-                  <div className="h-6 w-px bg-white/10" />
-                  <div className="min-w-0 truncate">{problem.category}</div>
-                </div>
-              </motion.article>
-            ))}
-          </div>
-
-          {/* View All Action */}
-          <div className="mt-3.5 flex justify-center rounded-[12px] border border-white/[0.08] bg-white/[0.025] py-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
-            <Link 
-              href="/problems" 
-              className="group flex items-center gap-2.5 text-sm font-medium text-[#ff5c00] underline underline-offset-4 transition-colors hover:text-[#ff7a33] sm:text-base"
-            >
-              View all 25 problems 
-              <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
-            </Link>
-          </div>
-        </div>
-
       </div>
-      
     </section>
   );
 }
 
 function ProblemOrbit() {
   return (
-    <div className="relative ml-auto aspect-square w-full max-w-[620px] xl:max-w-[680px]">
+    <div className="relative mx-auto aspect-square w-full max-w-[400px] sm:max-w-[520px] lg:ml-auto lg:max-w-[620px] xl:max-w-[680px]">
       
       {/* Animated Rotating Rings */}
       <motion.div
@@ -398,7 +297,13 @@ function ProblemOrbit() {
         </defs>
         {orbitProblems.map((problem, index) => (
           <g key={`${problem.title}-${index}`} filter="url(#orbitGlow)">
-            
+            <path
+              d={`M${problem.x} ${problem.y} L 50 50`}
+              stroke="rgba(226,232,240,0.18)"
+              strokeWidth="0.2"
+              strokeDasharray="1.2 1.9"
+              fill="none"
+            />
             <path
               className="orbit-flow-line"
               d={`M${problem.x} ${problem.y} C ${(50 + problem.x) / 2 + (index % 2 === 0 ? 2.4 : -2.4)} ${(50 + problem.y) / 2 - 2}, ${(50 + problem.x) / 2 + (index % 3 === 0 ? -2.8 : 2.8)} ${(50 + problem.y) / 2 + 2}, 50 50`}
@@ -416,47 +321,49 @@ function ProblemOrbit() {
         ))}
       </svg>
 
-      {/* Pulsing Center Hub with Opaque Dark Feature Card */}
+      {/* Pulsing Center Hub (Responsive Sizes) */}
       <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
         <motion.div
           animate={{ scale: [1, 1.03, 1] }}
           transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
         >
-          <DarkFeatureCard className="h-[128px] w-[128px] xl:h-[160px] xl:w-[160px]" rounded="rounded-[24px]">
+          <DarkFeatureCard 
+            className="h-[80px] w-[80px] sm:h-[100px] sm:w-[100px] lg:h-[128px] lg:w-[128px] xl:h-[160px] xl:w-[160px]" 
+            rounded="rounded-[14px] sm:rounded-[20px] lg:rounded-[24px]"
+          >
             <div className="text-center relative z-10">
-              <Layers className="mx-auto size-11 text-slate-200 xl:size-14" />
-              <div className="mt-3 text-sm font-bold text-white xl:text-base">System Design</div>
+              <Layers className="mx-auto size-5 sm:size-7 lg:size-11 xl:size-14 text-slate-200" />
+              <div className="mt-1 sm:mt-2 lg:mt-3 text-[9px] sm:text-[11px] lg:text-sm font-bold text-white xl:text-base">System Design</div>
             </div>
           </DarkFeatureCard>
         </motion.div>
       </div>
 
-      {/* Floating Company Nodes with Opaque Dark Feature Card */}
+      {/* Floating Company Nodes (Responsive Sizes) */}
       {orbitProblems.map((problem, index) => (
         <motion.div
           key={`${problem.title}-node-${index}`}
-          className="absolute  flex w-[112px]  -translate-x-1/2 -translate-y-1/2 flex-col items-center text-center xl:w-[122px]"
+          className="absolute flex w-[76px] sm:w-[96px] lg:w-[112px] xl:w-[122px] -translate-x-1/2 -translate-y-1/2 flex-col items-center text-center"
           style={{ left: `${problem.x}%`, top: `${problem.y}%` }}
-          animate={{ y: [0, -6, 0] }}
+          animate={{ y: [0, -4, 0] }} // Slightly gentler float for mobile compatibility
           transition={{
             duration: 4,
             repeat: Infinity,
             ease: "easeInOut",
-            delay: index * 0.4, // Staggered floating effect
+            delay: index * 0.4,
           }}
         >
-          {/* Note: Removed 'problem.iconTone' here to enforce the dark textured base strictly */}
           <DarkFeatureCard 
-            className="h-[52px] w-[52px] xl:h-[60px] xl:w-[60px]" 
-            rounded="rounded-[15px]"
+            className="h-[36px] w-[36px] sm:h-[44px] sm:w-[44px] lg:h-[52px] lg:w-[52px] xl:h-[60px] xl:w-[60px]" 
+            rounded="rounded-[10px] lg:rounded-[15px]"
           >
             <OrbitLogo type={problem.logo} />
           </DarkFeatureCard>
 
-          <div className="mt-3 text-xs  font-bold leading-4 text-white drop-shadow-[0_2px_14px_rgba(0,0,0,0.9)] xl:text-[13px]">
+          <div className="mt-1.5 sm:mt-2 lg:mt-3 text-[9px] sm:text-[11px] lg:text-xs font-bold leading-3 lg:leading-4 text-white drop-shadow-[0_2px_14px_rgba(0,0,0,0.9)] xl:text-[13px]">
             {problem.title}
           </div>
-          <div className={`mt-1.5 w-fit rounded-[6px] border px-1.5 py-0.5 text-[10px] font-medium leading-none shadow-lg ${problem.diffColor}`}>
+          <div className={`mt-1 lg:mt-1.5 w-fit rounded-[4px] lg:rounded-[6px] border px-1 py-[1px] lg:px-1.5 lg:py-0.5 text-[8px] lg:text-[10px] font-medium leading-none shadow-lg ${problem.diffColor}`}>
             {problem.difficulty}
           </div>
         </motion.div>
@@ -465,18 +372,19 @@ function ProblemOrbit() {
   );
 }
 
+// Adjusted OrbitLogo component with responsive icon scaling
 function OrbitLogo({ type }: { type?: string }) {
   if (type === "uber") {
-    return <span className="text-base font-medium tracking-[-0.08em] text-white xl:text-lg">Uber</span>;
+    return <span className="text-[10px] sm:text-xs lg:text-base font-medium tracking-[-0.08em] text-white xl:text-lg">Uber</span>;
   }
 
   if (type === "netflix") {
-    return <span className="text-3xl font-black tracking-[-0.08em] text-red-500 xl:text-4xl">N</span>;
+    return <span className="text-[18px] sm:text-2xl lg:text-3xl font-black tracking-[-0.08em] text-red-500 xl:text-4xl">N</span>;
   }
 
   if (type === "twitter") {
     return (
-      <svg viewBox="0 0 24 24" className="size-7 fill-sky-400 xl:size-8" aria-hidden="true">
+      <svg viewBox="0 0 24 24" className="size-4 sm:size-5 lg:size-7 fill-sky-400 xl:size-8" aria-hidden="true">
         <path d="M21.5 5.7c-.7.3-1.5.5-2.3.6.8-.5 1.4-1.2 1.7-2.2-.8.5-1.6.8-2.6 1-1.5-1.6-4.2-.8-4.7 1.4-.1.4-.1.8 0 1.1-3.2-.2-6-1.7-7.9-4-.4.7-.6 1.5-.4 2.4.2 1 .8 1.8 1.6 2.3-.6 0-1.2-.2-1.7-.5 0 1.8 1.3 3.3 3 3.6-.5.1-1.1.2-1.7.1.5 1.5 1.9 2.6 3.6 2.7-1.6 1.3-3.6 2-5.8 2h-.7c2.1 1.3 4.5 2.1 7.1 2.1 8.5 0 13.3-7.2 13-13.6.9-.6 1.5-1.3 2.1-2.1Z" />
       </svg>
     );
@@ -484,22 +392,21 @@ function OrbitLogo({ type }: { type?: string }) {
 
   if (type === "whatsapp") {
     return (
-      <svg viewBox="0 0 24 24" className="size-7  pfill-none stroke-emerald-400 stroke-[2.2] xl:size-8" aria-hidden="true">
-        <path className="h-2 " d="M4.7 19.4 6 15.7A7.4 7.4 0 1 1 9 18.6l-4.3.8Z" />
-      <path d="M9.1 8.2c.2-.5.4-.5.7-.5h.5c.2 0 .4.1.5.4l.7 1.6c.1.3.1.5-.1.7l-.4.5c-.1.1-.2.3 0 .5.4.8 1.2 1.6 2.1 2.1.2.1.4.1.5 0l.7-.8c.2-.2.4-.2.6-.1l1.6.8c.3.1.4.3.4.5 0 .6-.4 1.4-.9 1.6-.8.3-2 .1-3.5-.7-1.9-1-3.5-2.6-4.4-4.4-.5-1-.7-1.7-.5-2.2Z"
- />
+      <svg viewBox="0 0 24 24" className="size-4 sm:size-5 lg:size-7 fill-none stroke-emerald-400 stroke-[2.2] xl:size-8" aria-hidden="true">
+        <path d="M4.7 19.4 6 15.7A7.4 7.4 0 1 1 9 18.6l-4.3.8Z" />
+        <path d="M9.1 8.2c.2-.5.4-.5.7-.5h.5c.2 0 .4.1.5.4l.7 1.6c.1.3.1.5-.1.7l-.4.5c-.1.1-.2.3 0 .5.4.8 1.2 1.6 2.1 2.1.2.1.4.1.5 0l.7-.8c.2-.2.4-.2.6-.1l1.6.8c.3.1.4.3.4.5 0 .6-.4 1.4-.9 1.6-.8.3-2 .1-3.5-.7-1.9-1-3.5-2.6-4.4-4.4-.5-1-.7-1.7-.5-2.2Z" />
       </svg>
     );
   }
 
   if (type === "instagram") {
-    return <ImageIcon className="size-6 text-fuchsia-400 xl:size-7" />;
+    return <ImageIcon className="size-4 sm:size-[18px] lg:size-6 text-fuchsia-400 xl:size-7" />;
   }
 
-  if (type === "link") return <LinkIcon className="size-6 text-violet-300 xl:size-7" />;
-  if (type === "file") return <FileText className="size-6 text-blue-300 xl:size-7" />;
-  if (type === "cart") return <ShoppingCart className="size-6 text-violet-300 xl:size-7" />;
-  if (type === "bell") return <Bell className="size-6 text-orange-300 xl:size-7" />;
+  if (type === "link") return <LinkIcon className="size-4 sm:size-5 lg:size-6 text-violet-300 xl:size-7" />;
+  if (type === "file") return <FileText className="size-4 sm:size-5 lg:size-6 text-blue-300 xl:size-7" />;
+  if (type === "cart") return <ShoppingCart className="size-4 sm:size-5 lg:size-6 text-violet-300 xl:size-7" />;
+  if (type === "bell") return <Bell className="size-4 sm:size-5 lg:size-6 text-orange-300 xl:size-7" />;
 
-  return <Box className="size-6 text-white xl:size-7" />;
+  return <Box className="size-4 sm:size-5 lg:size-6 text-white xl:size-7" />;
 }

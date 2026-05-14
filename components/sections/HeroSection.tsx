@@ -69,6 +69,7 @@ export function HeroSection() {
       {/* ------------------------------------------------ */}
 
       {/* Grid Layout Container */}
+      
       <div className="relative z-[2] mx-auto grid w-full max-w-[1180px] items-center gap-8 lg:grid-cols-[410px_minmax(520px,1fr)] xl:gap-12">
         
         {/* LEFT COLUMN: Content */}
@@ -137,7 +138,7 @@ export function HeroSection() {
                   <Star key={index} className="size-4 fill-current" />
                 ))}
               </div>
-              <p className="mt-1 text-xs font-medium text-zinc-500 sm:text-[13px]">Loved by 10,000+ engineers worldwide</p>
+              <p className="mt-1 text-xs font-medium text-zinc-500 sm:text-[13px]">Upvoted by 25+ engineers worldwide</p>
             </div>
           </div>
         </div>

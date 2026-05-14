@@ -23,7 +23,7 @@ export default function LandingPage() {
       <HowItWorks />
       <PricingSection />
       <Testimonials />
-      <FinalCta />
+   
       <SiteFooter />
     </main>
   );
