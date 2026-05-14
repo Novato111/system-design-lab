@@ -141,3 +141,7 @@
 .animate-trust-marquee {
   animation: trust-marquee 22s linear infinite;
 }
+
+.orbit-flow-line {
+  filter: drop-shadow(0 0 4px rgba(226, 232, 240, 0.55));
+}

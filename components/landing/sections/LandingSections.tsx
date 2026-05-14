@@ -1,0 +1,12 @@
+export { SiteHeader } from "@/components/layout/SiteHeader";
+export { SiteFooter } from "@/components/layout/SiteFooter";
+export { HeroSection } from "@/components/sections/HeroSection";
+export { TrustBar } from "@/components/sections/TrustBar";
+export { HowItWorks } from "@/components/sections/HowItWorks";
+export { AnimatedCanvasMock } from "@/components/sections/AnimatedCanvasMock";
+export { SequenceEvaluationPanel } from "@/components/sections/SequenceEvaluationPanel";
+export { FeatureGrid } from "@/components/sections/FeatureGrid";
+export { PricingSection } from "@/components/sections/PricingSection";
+export { Testimonials } from "@/components/sections/Testimonials";
+export { ProblemLibrary } from "@/components/sections/ProblemLibrary";
+export { FinalCta } from "@/components/sections/FinalCta";
