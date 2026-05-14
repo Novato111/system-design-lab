@@ -17,7 +17,7 @@ import {
 import { Button } from "@/components/ui/button";
 
 // Snappy, fast easing curve for that premium Apple/Vercel feel
-const snappyEase = [0.16, 1, 0.3, 1];
+const snappyEase = [0.16, 1, 0.3, 1] as const;
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -85,7 +85,6 @@ export function HeroSection() {
         <div className="flex min-w-0 flex-col items-center text-center lg:items-start lg:text-left">
           
           <motion.div
-          //@ts-expect-error
             variants={itemVariants}
             className="mb-5 inline-flex max-w-full items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-zinc-300 backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] sm:mb-6 sm:text-[10px]"
           >
@@ -97,7 +96,6 @@ export function HeroSection() {
           </motion.div>
           
           <motion.h1
-            //@ts-expect-error
             variants={itemVariants}
             className="max-w-[680px] text-[34px] font-extrabold leading-[1.08] tracking-[-0.04em] text-white sm:text-[42px] lg:text-[52px]"
           >
@@ -106,7 +104,6 @@ export function HeroSection() {
           </motion.h1>
           
           <motion.p
-            //@ts-expect-error
             variants={itemVariants}
             className="mt-5 max-w-[430px] text-sm leading-7 text-zinc-400 sm:text-base"
           >
@@ -114,7 +111,6 @@ export function HeroSection() {
           </motion.p>
           
           <motion.form
-            //@ts-expect-error
             variants={itemVariants}
             className="mt-7 grid w-full max-w-[430px] gap-2.5 sm:grid-cols-[1fr_auto]"
           >
@@ -129,42 +125,51 @@ export function HeroSection() {
               size="lg"
               className="h-11 shrink-0 rounded-[10px] bg-white px-5 text-sm font-bold text-black shadow-[0_0_20px_rgba(255,255,255,0.1)] transition-all hover:scale-[1.02] hover:bg-zinc-200 sm:h-12"
             >
-              <Link href="/problems">
+              <Link href="/coming-soon">
                 Start Designing for Free <ArrowRight className="ml-2 size-4" />
               </Link>
             </Button>
           </motion.form>
 
-          <motion.div
-            //@ts-expect-error
-            variants={itemVariants}
-            className="mt-7 flex flex-wrap items-center justify-center gap-4 lg:justify-start"
-          >
-            <div className="flex -space-x-3">
-              {[["AS", "#8b5e3c"], ["RK", "#334155"], ["PM", "#7c2d12"], ["NJ", "#52525b"]].map(([initial, color]) => (
-                <div
-                  key={initial}
-                  className="grid size-9 place-items-center rounded-full border-2 border-[#050505] text-[10px] font-bold text-white shadow-sm"
-                  style={{ backgroundColor: color }}
-                >
-                  {initial}
-                </div>
-              ))}
-            </div>
-            <div>
-              <div className="flex gap-1 text-amber-400">
-                {Array.from({ length: 5 }).map((_, index) => (
-                  <Star key={index} className="size-4 fill-current" />
-                ))}
-              </div>
-              <p className="mt-1 text-xs font-medium text-zinc-500 sm:text-[13px]">Upvoted by 25+ engineers worldwide</p>
-            </div>
-          </motion.div>
+<motion.div
+  variants={itemVariants}
+  className="mt-7 flex w-full flex-col items-center gap-3 sm:flex-row sm:flex-wrap sm:justify-center lg:justify-start"
+>
+  {/* Avatars */}
+  <div className="flex shrink-0 -space-x-3">
+    {[
+      ["AS", "#8b5e3c"],
+      ["RK", "#334155"],
+      ["PM", "#7c2d12"],
+      ["NJ", "#52525b"],
+    ].map(([initial, color]) => (
+      <div
+        key={initial}
+        className="grid size-9 place-items-center rounded-full border-2 border-[#050505] text-[10px] font-bold text-white shadow-sm"
+        style={{ backgroundColor: color }}
+      >
+        {initial}
+      </div>
+    ))}
+  </div>
+
+  {/* Rating + Text */}
+  <div className="min-w-0 text-center sm:text-left">
+    <div className="flex items-center justify-center gap-1 text-amber-400 sm:justify-start">
+      {Array.from({ length: 5 }).map((_, index) => (
+        <Star key={index} className="size-4 fill-current" />
+      ))}
+    </div>
+
+    <p className="mt-1 whitespace-nowrap text-xs font-medium text-zinc-500 sm:text-[13px]">
+      Upvoted by 25+ engineers worldwide
+    </p>
+  </div>
+</motion.div>
         </div>
 
         {/* RIGHT COLUMN: Animated Image Card */}
         <motion.div 
-          //@ts-expect-error
           variants={itemVariants}
           className="relative flex w-full min-w-0 items-center justify-center"
         >
