@@ -35,7 +35,7 @@ export function SiteHeader() {
           </div>
           <div>
             <div className="text-[14px] font-bold tracking-[-0.01em] text-white sm:text-[15px]">
-              Kernel
+              Kernel.io
             </div>
            
           </div>
