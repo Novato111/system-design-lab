@@ -2,11 +2,13 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
+  Activity,
+  BarChart3,
   Bell,
-  Bot,
   Box,
   Check,
   ChevronDown,
@@ -15,22 +17,21 @@ import {
   Cloud,
   FileText,
   Gauge,
+  GitBranch,
+  HelpCircle,
   ImageIcon,
   Layers,
   LinkIcon,
   Mail,
-  MapPin,
-  MessageCircle,
   MessageSquare,
-  MessageSquareText,
   Network,
   Phone,
-  Play,
   Save,
+  Send,
   ServerCrash,
   ShoppingCart,
-  Sparkles,
   Star,
+  Users as UsersIcon,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -48,79 +49,23 @@ const companies = [
   "Microsoft",
 ];
 
-const steps = [
+const workflowSteps = [
   {
     title: "Pick a Problem",
-    text: "Choose from real-world system design challenges.",
-    icon: Sparkles,
-    tone: "text-fuchsia-300 bg-fuchsia-500/15",
+    text: "Choose from curated problems with real interview difficulty.",
   },
   {
-    title: "Design",
-    text: "Drag components onto the canvas and connect them.",
-    icon: Box,
-    tone: "text-blue-300 bg-blue-500/15",
+    title: "Build Your Architecture",
+    text: "Drag components onto the canvas, connect them, think through your design.",
   },
   {
-    title: "Simulate & Evaluate",
-    text: "Run evaluations to see how your system performs.",
-    icon: Play,
-    tone: "text-emerald-300 bg-emerald-500/15",
+    title: "Run the Simulation",
+    text: "Watch your system handle traffic spikes, crashes, and failures in real time.",
   },
   {
-    title: "Get AI Help",
-    text: "Ask the AI tutor for hints and trade-off guidance.",
-    icon: MessageSquareText,
-    tone: "text-violet-300 bg-violet-500/15",
+    title: "Get Evaluated",
+    text: "Receive a detailed score, detected traffic paths, issues, and suggestions.",
   },
-  {
-    title: "Save & Improve",
-    text: "Save designs and iterate toward production-ready thinking.",
-    icon: Save,
-    tone: "text-amber-300 bg-amber-500/15",
-  },
-];
-
-const features = [
-  {
-    title: "Interactive Canvas",
-    text: "React Flow drag-and-drop board with system components.",
-    icon: Network,
-    bullets: ["12+ Components", "Smart Connections", "Auto Layout", "Real-time Validation"],
-  },
-  {
-    title: "Evaluation Engine",
-    text: "In-depth analysis of architecture choices and risk areas.",
-    icon: Gauge,
-    bullets: ["DFS Path Detection", "SPOF Checks", "Security Best Practices", "Score & Feedback"],
-  },
-  {
-    title: "Failure Simulator",
-    text: "Simulate real-world pressure and learn where designs break.",
-    icon: ServerCrash,
-    bullets: ["Crash Events", "Latency Events", "Traffic Visualization", "Bottleneck Detection"],
-  },
-  {
-    title: "AI Tutor",
-    text: "Context-aware coaching that nudges without giving away answers.",
-    icon: Bot,
-    bullets: ["Powered by Gemini", "Board-aware Hints", "Socratic Guidance", "Interview Coaching"],
-  },
-  {
-    title: "Design Persistence",
-    text: "Never lose your work. Save, load, and resume anytime.",
-    icon: Cloud,
-    bullets: ["Cloud Sync", "Version-ready Flow", "Share & Export", "Access Anywhere"],
-  },
-];
-
-const problems = [
-  { title: "Design Uber", icon: "🚘" },
-  { title: "Design Instagram", icon: "📸" },
-  { title: "Design YouTube", icon: "▶" },
-  { title: "Design Twitter (X)", icon: "𝕏" },
-  { title: "Design ChatGPT", icon: "◎" },
-  { title: "Explore All", icon: "▦" },
 ];
 
 const testimonials = [
@@ -148,7 +93,7 @@ const testimonials = [
 ];
 
 // Reusable premium easing curve for that "shadcn" feel
-const premiumEase = [0.16, 1, 0.3, 1];
+const premiumEase = [0.06, 1, 0.3, 1] as const;
 
 export default function LandingPage() {
   return (
@@ -163,6 +108,7 @@ export default function LandingPage() {
       <Testimonials />
       <FinalCta />
       <SiteFooter />
+
     </main>
   );
 }
@@ -452,89 +398,746 @@ function TrustBar() {
   );
 }
 
-function HowItWorks() {
+
+
+export function HowItWorks() {
+  const [activeStep, setActiveStep] = useState(0);
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  const sectionRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    let frame = 0;
+
+    const updateProgress = () => {
+      const section = sectionRef.current;
+      if (!section) return;
+
+      const rect = section.getBoundingClientRect();
+
+      const totalScroll = section.offsetHeight - window.innerHeight;
+
+      const progress = Math.min(
+        1,
+        Math.max(0, -rect.top / totalScroll)
+      );
+
+      setScrollProgress(progress);
+
+      const step = Math.min(
+        workflowSteps.length - 1,
+        Math.floor(progress * workflowSteps.length)
+      );
+
+      setActiveStep(step);
+    };
+
+    const onScroll = () => {
+      cancelAnimationFrame(frame);
+
+      frame = requestAnimationFrame(updateProgress);
+    };
+
+    updateProgress();
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+
+    return () => {
+      cancelAnimationFrame(frame);
+
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
+
+  const scrollToStep = (index: number) => {
+    const section = sectionRef.current;
+
+    if (!section) return;
+
+    const sectionTop =
+      window.scrollY + section.getBoundingClientRect().top;
+
+    const scrollDistance =
+      section.offsetHeight - window.innerHeight;
+
+    const target =
+      sectionTop +
+      (scrollDistance / workflowSteps.length) * index;
+
+    window.scrollTo({
+      top: target,
+      behavior: "smooth",
+    });
+  };
+
   return (
-    <section id="how-it-works" className="mx-auto max-w-7xl px-5 py-24 lg:px-8">
-      <SectionHeading
-        eyebrow="Workflow"
-        title="From Problem to Production"
-        text="A hands-on workflow that mirrors real system design interviews."
-      />
-      <div className="mt-16 grid gap-5 md:grid-cols-2 lg:grid-cols-5">
-        {steps.map((step, index) => (
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 0.6, delay: index * 0.1, ease: premiumEase }}
-            key={step.title}
-            className="group relative rounded-2xl border border-white/5 bg-white/[0.02] p-6 transition-all hover:bg-white/[0.04] hover:shadow-[0_0_30px_rgba(255,255,255,0.03)]"
-          >
-            <div className={`mb-8 grid size-12 place-items-center rounded-xl transition-transform group-hover:scale-110 group-hover:shadow-lg ${step.tone}`}>
-              <step.icon className="size-6" />
+    <section
+      ref={sectionRef}
+      id="how-it-works"
+      className="relative overflow-hidden bg-[#050505] px-6 py-24 lg:h-[500vh] lg:px-10 lg:py-0"
+    >
+      {/* Background */}
+      <div className="absolute inset-0 -z-10 opacity-[0.16] [background-image:linear-gradient(rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.08)_1px,transparent_1px)] [background-size:48px_48px]" />
+
+      <div className="absolute left-0 top-0 -z-10 size-[520px] rounded-full bg-blue-500/5 blur-[130px]" />
+
+      <div className="absolute right-0 top-20 -z-10 size-[520px] rounded-full bg-white/[0.035] blur-[130px]" />
+
+      {/* Sticky Layout */}
+      <div className="mx-auto max-w-[1440px] lg:sticky lg:top-0 lg:flex lg:min-h-screen lg:flex-col lg:justify-center lg:py-24">
+        {/* Header */}
+        <div className="mx-auto max-w-[720px] text-center">
+          <p className="text-sm font-semibold uppercase tracking-[0.08em] text-[#ff5c00]">
+            How It Works
+          </p>
+
+          <h2 className="mt-6 text-4xl font-bold leading-[1.08] tracking-[-0.045em] text-white sm:text-5xl">
+            Simple workflow. Deep practice.
+          </h2>
+
+          <p className="mx-auto mt-6 max-w-[500px] text-lg leading-8 text-zinc-300/80">
+            From picking a problem to getting evaluated —
+            everything you need to master system design.
+          </p>
+        </div>
+
+        {/* Main Content */}
+        <div className="mt-16 grid gap-8 lg:grid-cols-[300px_1fr]">
+          {/* LEFT ROADMAP */}
+          <aside className="hidden lg:block">
+            <div className="sticky top-24 rounded-2xl border border-white/[0.08] bg-white/[0.025] p-6 backdrop-blur-xl">
+              <div className="mb-6 text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">
+                Roadmap
+              </div>
+
+              <div className="relative">
+                {/* Line */}
+                <div className="absolute left-[11px] top-3 h-[calc(100%-24px)] w-px bg-white/10" />
+
+                {/* Active Line */}
+                <div
+                  className="absolute left-[11px] top-3 w-px bg-[#ff5c00] transition-all duration-300"
+                  style={{
+                    height: `${
+                      (activeStep /
+                        (workflowSteps.length - 1)) *
+                      100
+                    }%`,
+                  }}
+                />
+
+                {/* Steps */}
+                <div className="space-y-7">
+                  {workflowSteps.map((step, index) => {
+                    const active = activeStep === index;
+                    const complete = activeStep > index;
+
+                    return (
+                      <button
+                        key={step.title}
+                        type="button"
+                        onClick={() => scrollToStep(index)}
+                        className="group relative flex w-full items-start gap-4 text-left"
+                      >
+                        <span
+                          className={`relative z-10 mt-1 grid size-6 place-items-center rounded-full border text-[10px] transition-all ${
+                            active || complete
+                              ? "border-[#ff5c00] bg-[#ff5c00] text-black shadow-[0_0_20px_rgba(255,92,0,0.35)]"
+                              : "border-white/15 bg-[#0b0b0b] text-zinc-600"
+                          }`}
+                        >
+                          {String(index + 1).padStart(2, "0")}
+                        </span>
+
+                        <span>
+                          <span
+                            className={`block text-sm font-semibold transition-colors ${
+                              active
+                                ? "text-white"
+                                : complete
+                                ? "text-zinc-300"
+                                : "text-zinc-600"
+                            }`}
+                          >
+                            {step.title}
+                          </span>
+
+                          <span
+                            className={`mt-1 block text-xs leading-5 ${
+                              active
+                                ? "text-zinc-400"
+                                : "text-zinc-700"
+                            }`}
+                          >
+                            {step.text}
+                          </span>
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
-            <h3 className="text-base font-bold text-white/90">
-              {index + 1}. {step.title}
-            </h3>
-            <p className="mt-3 text-sm leading-6 text-slate-400">{step.text}</p>
-          </motion.div>
-        ))}
+          </aside>
+
+          {/* RIGHT STACKED CARDS */}
+          <div className="relative hidden h-[620px] lg:block">
+            {workflowSteps.map((step, index) => {
+              const total = workflowSteps.length;
+
+              const current =
+                scrollProgress * (total - 1);
+
+              const offset = current - index;
+
+              const translateY = Math.max(
+                0,
+                offset * 90
+              );
+
+              const scale =
+                1 - Math.min(offset * 0.05, 0.15);
+
+              const opacity = offset < -0.8 ? 0 : 1;
+
+              return (
+                <div
+                  key={step.title}
+                  className="absolute inset-0 transition-all duration-500 will-change-transform"
+                  style={{
+                    zIndex: total - index,
+                    opacity,
+                    transform: `
+                      translateY(${translateY}px)
+                      scale(${scale})
+                    `,
+                  }}
+                >
+                  <WorkflowStepCard
+                    index={index}
+                    title={step.title}
+                    text={step.text}
+                    progress={scrollProgress}
+                    isPinnedLayout={true}
+                  />
+                </div>
+              );
+            })}
+          </div>
+
+          {/* MOBILE SLIDER */}
+          <div className="flex snap-x gap-5 overflow-x-auto pb-4 lg:hidden">
+            {workflowSteps.map((step, index) => (
+              <WorkflowStepCard
+                key={step.title}
+                index={index}
+                title={step.title}
+                text={step.text}
+                progress={scrollProgress}
+                isPinnedLayout={false}
+              />
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );
 }
 
-function FeatureGrid() {
+function WorkflowStepCard({
+  index,
+  title,
+  text,
+  progress,
+  isPinnedLayout,
+}: {
+  index: number;
+  title: string;
+  text: string;
+  progress: number;
+  isPinnedLayout: boolean;
+}) {
+  const stackProgress = progress * (workflowSteps.length - 1);
+  const distanceFromActive = stackProgress - index;
+  const incomingOffset = Math.max(0, Math.min(112, (index - stackProgress) * 112));
+  const settledDepth = Math.max(0, Math.min(1, distanceFromActive));
+  const scale = 1 - settledDepth * 0.035;
+  const desktopTransform = `translateY(${incomingOffset}%) scale(${scale})`;
+  const desktopOpacity = stackProgress < index - 0.9 ? 0 : 1;
+
   return (
-    <section id="features" className="mx-auto grid max-w-[1760px] gap-12 px-6 py-24 lg:grid-cols-[300px_minmax(0,1fr)] lg:px-20">
-      <motion.div 
-        initial={{ opacity: 0, x: -30 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.7, ease: premiumEase }}
-        className="flex flex-col justify-center"
-      >
-        <p className="mb-5 text-xs font-semibold uppercase tracking-[0.34em] text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-violet-400">
-          Powerful Features
-        </p>
-        <h2 className="max-w-xs text-4xl font-bold leading-tight tracking-[-0.03em] text-white">
-          Everything you need to crush interviews.
-        </h2>
-        <Link href="#features" className="mt-8 inline-flex items-center text-sm font-medium text-violet-300 transition-colors hover:text-violet-200">
-          Explore all features <ArrowRight className="ml-2 size-4" />
-        </Link>
-      </motion.div>
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        {features.map((feature, i) => (
-          <motion.article 
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: i * 0.1, ease: premiumEase }}
-            key={feature.title} 
-            className="group rounded-2xl border border-white/[0.06] bg-[#0A0A0A]/80 p-7 backdrop-blur-sm transition-all hover:border-white/10 hover:bg-[#111]"
-          >
-            <div className="mb-5 flex items-center gap-4">
-              <div className="grid size-10 place-items-center rounded-lg border border-white/10 bg-white/[0.04] text-violet-300 shadow-sm transition-transform group-hover:scale-110">
-                <feature.icon className="size-5" />
-              </div>
-              <h3 className="font-bold text-white/90">{feature.title}</h3>
-            </div>
-            <p className="min-h-[80px] text-sm leading-relaxed text-slate-400">{feature.text}</p>
-            <ul className="mt-6 space-y-3 text-sm text-slate-400">
-              {feature.bullets.map((bullet) => (
-                <li key={bullet} className="flex items-center gap-3">
-                  <div className="flex size-4 items-center justify-center rounded-full bg-violet-500/10">
-                    <Check className="size-3 text-violet-300" />
-                  </div>
-                  {bullet}
-                </li>
-              ))}
-            </ul>
-          </motion.article>
+    <motion.div
+      data-step-index={index}
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.7, ease: premiumEase }}
+      className="relative min-h-[520px] min-w-[86vw] snap-center overflow-hidden rounded-[16px] border border-white/[0.1] bg-[linear-gradient(180deg,rgba(255,255,255,0.052),rgba(255,255,255,0.018))] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.07),0_30px_90px_rgba(0,0,0,0.34)] sm:min-w-[620px] lg:absolute lg:inset-0 lg:min-w-0 lg:will-change-transform"
+      style={{
+        zIndex: index + 1,
+        transform: isPinnedLayout ? desktopTransform : undefined,
+        opacity: isPinnedLayout ? desktopOpacity : undefined,
+      }}
+    >
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_80%_10%,rgba(255,255,255,0.055),transparent_30%)]" />
+      <div className="pointer-events-none absolute inset-0 opacity-[0.16] [background-image:radial-gradient(rgba(255,255,255,0.28)_1px,transparent_1px)] [background-size:18px_18px]" />
+      <div className="relative z-10 grid h-full gap-10 lg:grid-cols-[260px_1fr] lg:items-center">
+        <div>
+          <div className="grid size-12 place-items-center rounded-lg border border-[#ff5c00]/45 bg-[#ff5c00]/10 text-2xl font-semibold text-[#ff5c00]">
+            {String(index + 1).padStart(2, "0")}
+          </div>
+          <h3 className="mt-12 text-3xl font-semibold tracking-[-0.035em] text-white">{title}</h3>
+          <p className="mt-5 max-w-[300px] text-lg leading-8 text-zinc-300/85">{text}</p>
+        </div>
+
+        {index === 0 && <WorkflowProblemPreview />}
+        {index === 1 && <WorkflowArchitecturePreview />}
+        {index === 2 && <WorkflowSimulationPreview />}
+        {index === 3 && <WorkflowEvaluationPreview />}
+      </div>
+    </motion.div>
+  );
+}
+
+function WorkflowProblemPreview() {
+  return (
+    <div className="ml-auto w-full max-w-[360px] rounded-xl border border-white/10 bg-[#101113]/80 p-4 shadow-2xl">
+      <div className="mb-4 flex items-center justify-between text-sm font-semibold text-white">
+        Problem Library
+        <Box className="size-4 text-zinc-500" />
+      </div>
+      {[
+        ["Design Uber", "Hard", "45 min", "text-red-300 bg-red-500/15"],
+        ["Design Twitter Feed", "Hard", "60 min", "text-red-300 bg-red-500/15"],
+        ["Design URL Shortener", "Medium", "30 min", "text-amber-300 bg-amber-500/15"],
+        ["Design Instagram Feed", "Medium", "50 min", "text-amber-300 bg-amber-500/15"],
+      ].map(([name, difficulty, time, tone]) => (
+        <div key={name} className="mb-3 flex items-center justify-between rounded-lg border border-white/8 bg-black/20 px-3 py-3 text-sm last:mb-0">
+          <span className="text-white">{name}</span>
+          <span className={`rounded px-2 py-0.5 text-xs ${tone}`}>{difficulty}</span>
+          <span className="text-zinc-500">{time}</span>
+        </div>
+      ))}
+      <Link href="/problems" className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[#ff5c00]">
+        View all problems <ArrowRight className="size-4" />
+      </Link>
+    </div>
+  );
+}
+
+function WorkflowArchitecturePreview() {
+  return (
+    <div className="relative min-h-[360px] overflow-hidden rounded-xl border border-white/10 bg-black/15">
+      <div className="absolute inset-0 opacity-[0.18] [background-image:linear-gradient(rgba(255,255,255,0.12)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.12)_1px,transparent_1px)] [background-size:32px_32px]" />
+      <div className="absolute left-6 top-8 grid gap-3 rounded-lg border border-white/10 bg-white/[0.035] p-3">
+        {[Network, Box, Clock, LinkIcon, MessageSquare].map((Icon, index) => (
+          <div key={index} className="grid size-9 place-items-center rounded-md text-zinc-300">
+            <Icon className="size-5" />
+          </div>
         ))}
       </div>
+      <FeatureNode className="left-[55%] top-[12%] border-orange-500/50 text-orange-300" label="Load Balancer" />
+      <FeatureNode className="left-[55%] top-[34%] border-sky-500/50 text-sky-300" label="API Gateway" />
+      <FeatureNode className="left-[38%] top-[55%] border-sky-500/50 text-sky-300" label="User Service" />
+      <FeatureNode className="left-[73%] top-[55%] border-sky-500/50 text-sky-300" label="User Service" />
+      <FeatureNode className="left-[38%] top-[78%] border-emerald-500/50 text-emerald-300" label="Redis Cache" />
+      <FeatureNode className="left-[73%] top-[78%] border-violet-500/50 text-violet-300" label="PostgreSQL" />
+      <div className="absolute left-[55%] top-[22%] h-10 w-px bg-white/30" />
+      <div className="absolute left-[55%] top-[44%] h-px w-[18%] bg-white/25" />
+      <div className="absolute left-[38%] top-[44%] h-px w-[18%] bg-white/25" />
+      <div className="absolute left-[38%] top-[64%] h-12 w-px bg-white/25" />
+      <div className="absolute left-[73%] top-[64%] h-12 w-px bg-white/25" />
+    </div>
+  );
+}
+
+function WorkflowSimulationPreview() {
+  return (
+    <div className="rounded-xl border border-white/10 bg-black/20 p-5">
+      <div className="mb-5 flex items-center justify-end gap-2 text-sm font-semibold text-emerald-400">
+        <span className="size-2 rounded-full bg-emerald-400" />
+        Live
+      </div>
+      <div className="mb-6 flex items-center gap-3 text-xs">
+        <FeaturePill label="Users" />
+        <div className="h-px flex-1 bg-emerald-500/40" />
+        <FeaturePill tone="border-orange-500/50 text-orange-300" label="Load Balancer" />
+        <div className="h-px flex-1 bg-sky-500/40" />
+        <FeaturePill tone="text-sky-300" label="API Gateway" />
+        <div className="h-px flex-1 bg-red-500/60" />
+        <FeaturePill tone="border-red-500/50 text-red-300" label="Database" />
+        <span className="text-xs font-semibold text-red-500">CRASHED</span>
+      </div>
+      <div className="space-y-5 text-sm text-zinc-300">
+        {[
+          ["00:00", "Simulation started", "bg-zinc-600"],
+          ["00:12", "Traffic spike", "bg-red-500"],
+          ["00:24", "Database crash", "bg-red-500"],
+          ["00:32", "Latency spike", "bg-orange-400"],
+        ].map(([time, label, tone]) => (
+          <div key={label} className="grid grid-cols-[56px_1fr_180px] items-center gap-5">
+            <span className="text-zinc-500">{time}</span>
+            <span>{label}</span>
+            <span className={`h-px ${tone}`} />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function WorkflowEvaluationPreview() {
+  return (
+    <div className="ml-auto w-full max-w-[420px] rounded-xl border border-white/10 bg-[#101113]/85 p-6 shadow-2xl">
+      <div className="grid grid-cols-[120px_1fr] gap-7">
+        <div className="grid size-28 place-items-center rounded-full border-[8px] border-emerald-400 text-center">
+          <div>
+            <div className="text-4xl font-bold text-white">82</div>
+            <div className="text-xs text-zinc-500">/100</div>
+          </div>
+        </div>
+        <div className="space-y-3 text-sm text-zinc-300">
+          {[
+            ["Reliability", "18/20", "text-emerald-400"],
+            ["Scalability", "16/20", "text-emerald-400"],
+            ["Performance", "17/20", "text-amber-400"],
+            ["Security", "15/20", "text-orange-400"],
+            ["Best Practices", "16/20", "text-amber-400"],
+          ].map(([label, value, tone]) => (
+            <div key={label} className="flex justify-between gap-5">
+              <span>{label}</span>
+              <span className={tone}>{value}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="mt-7 text-sm font-semibold text-white">Detected Issues</div>
+      <div className="mt-4 space-y-3 text-sm">
+        {[
+          ["Single Point of Failure (Database)", "High", "text-red-400"],
+          ["Missing Cache Layer", "Medium", "text-amber-400"],
+          ["No Rate Limiting", "Low", "text-emerald-400"],
+        ].map(([issue, level, tone]) => (
+          <div key={issue} className="flex justify-between gap-5 text-zinc-300">
+            <span>{issue}</span>
+            <span className={tone}>{level}</span>
+          </div>
+        ))}
+      </div>
+      <Link href="/problems" className="mt-7 inline-flex items-center gap-2 text-sm font-semibold text-[#ff5c00]">
+        View full report <ArrowRight className="size-4" />
+      </Link>
+    </div>
+  );
+}
+
+function FeatureGrid() {
+  return (
+    <section id="features" className="relative overflow-hidden bg-[#050505] px-6 py-24 lg:px-10">
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_75%_12%,rgba(59,130,246,0.08),transparent_28%),radial-gradient(circle_at_18%_40%,rgba(255,255,255,0.045),transparent_30%)]" />
+      <div className="mx-auto max-w-[1440px]">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, ease: premiumEase }}
+          className="mb-5 text-sm font-semibold uppercase tracking-[0.08em] text-[#ff5c00]"
+        >
+          Features
+        </motion.div>
+
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, delay: 0.05, ease: premiumEase }}
+          className="max-w-[860px] text-4xl font-bold leading-[1.08] tracking-[-0.045em] text-white sm:text-5xl"
+        >
+          Built for serious system design practice.
+        </motion.h2>
+
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, delay: 0.1, ease: premiumEase }}
+          className="mt-5 max-w-[460px] text-base leading-7 text-zinc-300/80"
+        >
+          Every feature is engineered to mirror real-world complexity and help you think like a systems engineer.
+        </motion.p>
+
+        <div className="mt-6 grid gap-4 lg:grid-cols-12">
+          <FeatureCard className="lg:col-span-5">
+            <div className="flex h-full min-h-[390px] flex-col">
+              <FeatureNumber value="01" />
+              <div className="mt-8 grid flex-1 gap-8 md:grid-cols-[220px_1fr]">
+                <div>
+                  <h3 className="text-2xl font-semibold tracking-[-0.03em] text-white">Interactive Canvas</h3>
+                  <p className="mt-5 text-[15px] leading-7 text-zinc-300/80">
+                    Drag and drop 12 system components. Connect them with edges. Build architectures that mirror real production systems.
+                  </p>
+                  <div className="mt-24 inline-flex items-center gap-3 rounded-lg border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-zinc-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
+                    <ServerCrash className="size-4 text-white" />
+                    React Flow powered
+                  </div>
+                </div>
+
+                <div className="relative min-h-[300px] overflow-hidden rounded-xl">
+                  <div className="absolute inset-0 opacity-70 [background-image:radial-gradient(rgba(255,255,255,0.14)_1px,transparent_1px)] [background-size:14px_14px]" />
+                  <div className="absolute right-4 top-2 grid size-12 place-items-center rounded-lg border border-white/10 bg-white/[0.05] text-white">
+                    <Network className="size-5" />
+                  </div>
+                  <div className="absolute left-2 top-16 w-28 rounded-lg border border-white/10 bg-[#121317] p-4 shadow-2xl">
+                    {["Load Balancer", "API Gateway", "Web Server", "Database", "Cache"].map((item) => (
+                      <div key={item} className="mb-4 flex items-center gap-2 text-[11px] text-zinc-300 last:mb-0">
+                        <Box className="size-3 text-zinc-400" />
+                        {item}
+                      </div>
+                    ))}
+                    <div className="mt-3 text-lg leading-none text-white">...</div>
+                  </div>
+                  <FeatureNode className="left-[55%] top-[20%] border-orange-500/50 text-orange-300" label="Load Balancer" />
+                  <FeatureNode className="left-[55%] top-[42%] border-sky-500/50 text-sky-300" label="API Gateway" />
+                  <FeatureNode className="left-[36%] top-[64%] border-sky-500/50 text-sky-300" label="Web Server" />
+                  <FeatureNode className="left-[74%] top-[64%] border-sky-500/50 text-sky-300" label="Web Server" />
+                  <FeatureNode className="left-[38%] top-[84%] border-emerald-500/50 text-emerald-300" label="Cache" />
+                  <FeatureNode className="left-[76%] top-[84%] border-violet-500/50 text-violet-300" label="Database" />
+                  <div className="absolute left-[55%] top-[31%] h-8 w-px bg-white/35" />
+                  <div className="absolute left-[55%] top-[53%] h-px w-[19%] bg-white/25" />
+                  <div className="absolute left-[36%] top-[53%] h-px w-[19%] bg-white/25" />
+                </div>
+              </div>
+            </div>
+          </FeatureCard>
+
+          <FeatureCard className="lg:col-span-3">
+            <FeatureNumber value="02" />
+            <div className="absolute right-5 top-5 grid size-11 place-items-center rounded-lg border border-white/10 bg-white/[0.04] text-white">
+              <BarChart3 className="size-5" />
+            </div>
+            <h3 className="mt-8 text-2xl font-semibold tracking-[-0.03em] text-white">Evaluation Engine</h3>
+            <p className="mt-4 text-[15px] leading-7 text-zinc-300/80">
+              Rule-based validator that runs DFS path detection on your graph. Detects SPOFs, missing cache layers, security gaps, floating components. Scores you out of 100 with a full breakdown.
+            </p>
+            <div className="mt-4 rounded-xl border border-white/10 bg-black/20 p-4">
+              <div className="grid grid-cols-[110px_1fr] gap-4">
+                <div className="grid size-24 place-items-center rounded-full border-[7px] border-emerald-400 text-center">
+                  <div>
+                    <div className="text-3xl font-bold text-white">82</div>
+                    <div className="text-xs text-zinc-500">/100</div>
+                  </div>
+                </div>
+                <div className="space-y-2 text-sm text-zinc-300">
+                  {[
+                    ["Reliability", "18/20", "text-emerald-400"],
+                    ["Scalability", "16/20", "text-emerald-400"],
+                    ["Performance", "17/20", "text-amber-400"],
+                    ["Security", "15/20", "text-orange-400"],
+                    ["Best Practices", "16/20", "text-amber-400"],
+                  ].map(([label, value, tone]) => (
+                    <div key={label} className="flex justify-between gap-3">
+                      <span>{label}</span>
+                      <span className={tone}>{value}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div className="mt-4 grid gap-2 text-sm text-zinc-300 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+              {["DFS Path Detection", "Security Gap Analysis", "SPOF Detection", "Floating Component Check", "Cache Layer Validation"].map((item) => (
+                <div key={item} className="flex items-center gap-2">
+                  <Check className="size-4 rounded-full bg-emerald-400/10 p-0.5 text-emerald-400" />
+                  {item}
+                </div>
+              ))}
+            </div>
+          </FeatureCard>
+
+          <FeatureCard className="lg:col-span-4">
+            <FeatureNumber value="03" />
+            <div className="absolute right-5 top-5 grid size-11 place-items-center rounded-lg border border-white/10 bg-white/[0.04] text-white">
+              <Activity className="size-5" />
+            </div>
+            <h3 className="mt-8 text-2xl font-semibold tracking-[-0.03em] text-white">Failure Simulator</h3>
+            <p className="mt-4 max-w-[320px] text-[15px] leading-7 text-zinc-300/80">
+              Scripted event engine that animates crashes, latency spikes, and traffic overloads on your canvas in real time. See exactly which parts of your design break first.
+            </p>
+            <div className="mt-8 flex items-center gap-3 text-xs">
+              <FeaturePill tone="text-sky-300" label="Web Server" />
+              <div className="h-px flex-1 bg-gradient-to-r from-sky-400/40 to-orange-400/40" />
+              <FeaturePill tone="text-sky-300" label="API Gateway" />
+              <div className="h-px flex-1 bg-gradient-to-r from-orange-400/40 to-red-400/70" />
+              <FeaturePill tone="border-red-500/50 text-red-300" label="Database" />
+              <span className="ml-2 text-xs font-semibold text-red-500">CRASHED</span>
+            </div>
+            <div className="mt-6 space-y-4 border-t border-white/10 pt-5 text-sm text-zinc-300">
+              {[
+                ["00:00", "Simulation started", "bg-zinc-600"],
+                ["00:12", "Traffic spike", "bg-red-500"],
+                ["00:24", "Database crash", "bg-red-500"],
+                ["00:32", "Latency spike", "bg-orange-400"],
+              ].map(([time, label, tone]) => (
+                <div key={label} className="grid grid-cols-[56px_1fr_150px] items-center gap-4">
+                  <span className="text-zinc-500">{time}</span>
+                  <span>{label}</span>
+                  <span className={`h-px ${tone}`} />
+                </div>
+              ))}
+            </div>
+            <div className="mt-6 flex justify-between border-t border-white/10 pt-4 text-xs text-zinc-500">
+              <span>00:00</span>
+              <span>00:45</span>
+            </div>
+          </FeatureCard>
+
+          <FeatureCard className="lg:col-span-5">
+            <div className="grid min-h-[280px] gap-8 md:grid-cols-[230px_1fr]">
+              <div>
+                <FeatureNumber value="04" />
+                <h3 className="mt-8 text-2xl font-semibold tracking-[-0.03em] text-white">AI Tutor</h3>
+                <p className="mt-4 text-[15px] leading-7 text-zinc-300/80">
+                  Context-aware coach that reads your current graph and gives Socratic hints. It knows what you built, what you&apos;re missing, and where to nudge you. Not generic advice — specific to your design.
+                </p>
+              </div>
+              <div className="rounded-xl border border-white/10 bg-white/[0.025] p-4">
+                <div className="mb-4 flex items-center gap-3 border-b border-white/10 pb-4 text-sm font-semibold text-white">
+                  AI Tutor
+                  <span className="flex items-center gap-1 text-xs font-medium text-emerald-400">
+                    <span className="size-1.5 rounded-full bg-emerald-400" /> Online
+                  </span>
+                </div>
+                <div className="rounded-lg border border-white/10 bg-white/[0.045] p-4 text-sm leading-6 text-zinc-200">
+                  Your design is missing a cache layer between the API and DB. This could lead to high DB load.
+                  <br />
+                  <br />
+                  Consider adding Redis or Memcached to improve performance.
+                </div>
+                <div className="mt-4 flex items-center rounded-lg border border-white/10 bg-black/25 p-2 text-sm text-zinc-500">
+                  <span className="flex-1 px-2">Ask a follow-up...</span>
+                  <button className="grid size-9 place-items-center rounded-md bg-white/[0.08] text-white" type="button">
+                    <Send className="size-4" />
+                  </button>
+                </div>
+                <div className="mt-4 grid grid-cols-2 gap-2 text-sm text-zinc-300">
+                  <div className="flex items-center justify-center gap-2 rounded-lg border border-white/10 py-3">
+                    <HelpCircle className="size-4" /> Socratic hints
+                  </div>
+                  <div className="flex items-center justify-center gap-2 rounded-lg border border-white/10 py-3">
+                    <GitBranch className="size-4" /> Graph-aware
+                  </div>
+                </div>
+              </div>
+            </div>
+          </FeatureCard>
+
+          <FeatureCard className="lg:col-span-7">
+            <div className="grid min-h-[280px] gap-8 md:grid-cols-[260px_1fr_280px]">
+              <div>
+                <FeatureNumber value="05" />
+                <h3 className="mt-8 text-2xl font-semibold tracking-[-0.03em] text-white">Design Persistence</h3>
+                <p className="mt-4 text-[15px] leading-7 text-zinc-300/80">
+                  Your designs are saved and synced. Pick up where you left off. Share your design link. Export and compare with others.
+                </p>
+              </div>
+              <div>
+                <div className="overflow-hidden rounded-xl border border-white/10 bg-white/[0.035]">
+                  {["Auto-saved to cloud", "Shareable link", "Export as image / JSON", "Compare with community", "Sync across devices"].map((item) => (
+                    <div key={item} className="flex items-center justify-between border-b border-white/10 px-4 py-3 text-sm text-zinc-300 last:border-b-0">
+                      {item}
+                      <Check className="size-4 text-emerald-400" />
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-5 grid grid-cols-4 gap-3">
+                  {[Cloud, LinkIcon, Save, UsersIcon].map((Icon, index) => (
+                    <div key={index} className="grid size-11 place-items-center rounded-lg border border-white/10 bg-white/[0.04] text-white">
+                      <Icon className="size-5" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="rounded-xl border border-white/10 bg-white/[0.025] p-4">
+                <div className="mb-4 flex items-center justify-between text-sm font-semibold text-white">
+                  Your Designs
+                  <Link href="/problems" className="text-xs font-medium text-sky-400">
+                    View all
+                  </Link>
+                </div>
+                {["Twitter Feed System", "Uber Backend", "Notification Service"].map((item, index) => (
+                  <div key={item} className="flex items-center gap-3 border-b border-white/10 py-3 last:border-b-0">
+                    <div className="grid size-12 place-items-center rounded-md border border-white/10 bg-black/30 text-zinc-500">
+                      <GitBranch className="size-5" />
+                    </div>
+                    <div>
+                      <div className="text-sm font-medium text-white">{item}</div>
+                      <div className="mt-1 text-xs text-zinc-500">Updated {index === 0 ? "2h" : `${index}d`} ago</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </FeatureCard>
+        </div>
+      </div>
     </section>
+  );
+}
+
+function FeatureCard({
+  children,
+  className = "",
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <motion.article
+      initial={{ opacity: 0, y: 18 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-80px" }}
+      transition={{ duration: 0.65, ease: premiumEase }}
+      className={`relative overflow-hidden rounded-[14px] border border-white/[0.09] bg-[linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.015))] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.07),0_24px_80px_rgba(0,0,0,0.28)] ${className}`}
+    >
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_80%_0%,rgba(255,255,255,0.07),transparent_28%)]" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/35 to-transparent" />
+      <div className="relative z-10 h-full">{children}</div>
+    </motion.article>
+  );
+}
+
+function FeatureNumber({ value }: { value: string }) {
+  return <div className="text-sm font-semibold tracking-[0.06em] text-[#ff5c00]">{value}</div>;
+}
+
+function FeatureNode({
+  className,
+  label,
+}: {
+  className: string;
+  label: string;
+}) {
+  return (
+    <div
+      className={`absolute grid h-10 w-[104px] place-items-center rounded-md border bg-black/35 text-[10px] font-medium shadow-lg ${className}`}
+    >
+      {label}
+    </div>
+  );
+}
+
+function FeaturePill({
+  label,
+  tone = "text-zinc-300",
+}: {
+  label: string;
+  tone?: string;
+}) {
+  return (
+    <div className={`rounded-md border border-white/10 bg-white/[0.035] px-3 py-2 font-medium ${tone}`}>
+      {label}
+    </div>
   );
 }
 
@@ -734,118 +1337,238 @@ function FooterColumn({ title, items }: { title: string; items: string[] }) {
 }
 
 
+const problemStats = [
+  { value: "25+", label: "Interview Problems", icon: Box, tone: "text-[#ff5c00]" },
+  { value: "10-60", label: "Est. Time Range", icon: Clock, tone: "text-sky-400" },
+  { value: "6", label: "Categories", icon: Layers, tone: "text-emerald-400" },
+  { value: "3", label: "Difficulty Levels", icon: Gauge, tone: "text-violet-400" },
+];
+
 const problemData = [
-  { title: "Design Uber", brand: "Uber", difficulty: "Hard", diffColor: "text-red-400 border-red-400/20 bg-red-400/10", time: "45 min", category: "Distributed Systems" },
-  { title: "Design Twitter", icon: MessageSquare, difficulty: "Hard", diffColor: "text-red-400 border-red-400/20 bg-red-400/10", time: "60 min", category: "Distributed Systems" },
-  { title: "Design WhatsApp", icon: Phone, difficulty: "Hard", diffColor: "text-red-400 border-red-400/20 bg-red-400/10", time: "50 min", category: "Distributed Systems" },
-  { title: "Design Netflix", brand: "N", difficulty: "Medium", diffColor: "text-amber-400 border-amber-400/20 bg-amber-400/10", time: "60 min", category: "Streaming" },
-  { title: "Design URL Shortener", icon: LinkIcon, difficulty: "Easy", diffColor: "text-emerald-400 border-emerald-400/20 bg-emerald-400/10", time: "30 min", category: "Web Services" },
-  { title: "Design Pastebin", icon: FileText, difficulty: "Medium", diffColor: "text-amber-400 border-amber-400/20 bg-amber-400/10", time: "40 min", category: "Storage" },
-  { title: "Design Instagram Feed", icon: ImageIcon, difficulty: "Medium", diffColor: "text-amber-400 border-amber-400/20 bg-amber-400/10", time: "50 min", category: "Distributed Systems" },
-  { title: "Design Notification System", icon: Bell, difficulty: "Medium", diffColor: "text-amber-400 border-amber-400/20 bg-amber-400/10", time: "45 min", category: "Messaging" },
-  { title: "Design E-commerce Store", icon: ShoppingCart, difficulty: "Hard", diffColor: "text-red-400 border-red-400/20 bg-red-400/10", time: "60 min", category: "Distributed Systems" },
-  { title: "Design Chat System", icon: MessageCircle, difficulty: "Medium", diffColor: "text-amber-400 border-amber-400/20 bg-amber-400/10", time: "45 min", category: "Messaging" },
-  { title: "Design File Storage", icon: Cloud, difficulty: "Easy", diffColor: "text-emerald-400 border-emerald-400/20 bg-emerald-400/10", time: "40 min", category: "Storage" },
-  { title: "Design Google Maps", icon: MapPin, difficulty: "Hard", diffColor: "text-red-400 border-red-400/20 bg-red-400/10", time: "60 min", category: "Geospatial" },
+  {
+    title: "Design Uber",
+    description: "Design Uber ride-hailing system. Handle matching, pricing, tracking, and payments at scale.",
+    brand: "Uber",
+    difficulty: "Hard",
+    diffColor: "text-red-300 border-red-400/20 bg-red-500/15",
+    time: "45 min",
+    category: "Distributed Systems",
+    iconTone: "border-white/10 bg-black text-white",
+  },
+  {
+    title: "Design Twitter",
+    description: "Design Twitter feed and timeline system. Scale tweets, timelines, and real-time updates.",
+    icon: MessageSquare,
+    difficulty: "Hard",
+    diffColor: "text-red-300 border-red-400/20 bg-red-500/15",
+    time: "60 min",
+    category: "Distributed Systems",
+    iconTone: "border-sky-400/40 bg-sky-500/15 text-sky-400",
+  },
+  {
+    title: "Design WhatsApp",
+    description: "Design real-time messaging system with 1-on-1 and group chats, delivery, and presence.",
+    icon: Phone,
+    difficulty: "Hard",
+    diffColor: "text-red-300 border-red-400/20 bg-red-500/15",
+    time: "50 min",
+    category: "Distributed Systems",
+    iconTone: "border-emerald-400/45 bg-emerald-500/15 text-emerald-300",
+  },
+  {
+    title: "Design Netflix",
+    description: "Design video streaming platform with recommendation, playback, and content delivery.",
+    brand: "N",
+    difficulty: "Medium",
+    diffColor: "text-amber-300 border-amber-400/20 bg-amber-500/15",
+    time: "60 min",
+    category: "Streaming",
+    iconTone: "border-red-500/45 bg-red-500/10 text-red-500",
+  },
+  {
+    title: "Design URL Shortener",
+    description: "Design a URL shortener like bit.ly with analytics and custom aliases.",
+    icon: LinkIcon,
+    difficulty: "Easy",
+    diffColor: "text-emerald-300 border-emerald-400/20 bg-emerald-500/15",
+    time: "30 min",
+    category: "Web Services",
+    iconTone: "border-violet-400/45 bg-violet-500/15 text-violet-300",
+  },
+  {
+    title: "Design Pastebin",
+    description: "Design Pastebin clone with syntax highlighting, expiration, and private pastes.",
+    icon: FileText,
+    difficulty: "Medium",
+    diffColor: "text-amber-300 border-amber-400/20 bg-amber-500/15",
+    time: "40 min",
+    category: "Storage",
+    iconTone: "border-blue-400/45 bg-blue-500/15 text-blue-300",
+  },
+  {
+    title: "Design Instagram Feed",
+    description: "Design Instagram news feed system with ranking, caching, and media loading.",
+    icon: ImageIcon,
+    difficulty: "Medium",
+    diffColor: "text-amber-300 border-amber-400/20 bg-amber-500/15",
+    time: "50 min",
+    category: "Distributed Systems",
+    iconTone: "border-orange-400/45 bg-gradient-to-br from-fuchsia-500/30 via-red-500/20 to-amber-400/20 text-white",
+  },
+  {
+    title: "Design Notification System",
+    description: "Design a notification system with real-time delivery, retries, and preferences.",
+    icon: Bell,
+    difficulty: "Medium",
+    diffColor: "text-amber-300 border-amber-400/20 bg-amber-500/15",
+    time: "45 min",
+    category: "Messaging",
+    iconTone: "border-orange-400/45 bg-orange-500/15 text-orange-300",
+  },
+  {
+    title: "Design E-commerce Store",
+    description: "Design e-commerce platform with catalog, cart, orders, and payment flow.",
+    icon: ShoppingCart,
+    difficulty: "Hard",
+    diffColor: "text-red-300 border-red-400/20 bg-red-500/15",
+    time: "60 min",
+    category: "Distributed Systems",
+    iconTone: "border-violet-400/45 bg-violet-500/15 text-violet-300",
+  },
 ];
 
 function ProblemLibrary() {
   return (
-    <section id="problems" className="relative border-t border-white/5 bg-[#050505] px-6 py-24 lg:px-10">
-      <div className="mx-auto grid max-w-[1440px] items-start gap-16 lg:grid-cols-[400px_1fr] xl:grid-cols-[450px_1fr]">
+    <section id="problems" className="relative overflow-hidden border-t border-white/5 bg-[#050505] px-6 py-24 lg:px-10">
+      <div
+        className="absolute inset-0 -z-10 opacity-[0.12]"
+        style={{
+          backgroundImage:
+            "linear-gradient(to right, rgba(255,255,255,0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.08) 1px, transparent 1px)",
+          backgroundSize: "48px 48px",
+          maskImage: "radial-gradient(ellipse 78% 70% at 50% 45%, black 35%, transparent 100%)",
+          WebkitMaskImage: "radial-gradient(ellipse 78% 70% at 50% 45%, black 35%, transparent 100%)",
+        }}
+      />
+      <div className="absolute left-[12%] top-20 -z-10 size-[420px] rounded-full bg-blue-500/5 blur-[120px]" />
+      <div className="absolute right-[10%] top-10 -z-10 size-[520px] rounded-full bg-white/[0.035] blur-[130px]" />
+
+      <div className="mx-auto grid max-w-[1440px] items-start gap-16 lg:grid-cols-[390px_1fr] xl:grid-cols-[430px_1fr]">
         
         {/* LEFT COLUMN: Sticky Header Content */}
         <div className="sticky top-32 flex flex-col items-start">
-          {/* Subtle background grid trapped only in the left column */}
-          <div 
-            className="absolute -inset-x-6 -inset-y-24 -z-10 opacity-[0.04]"
-            style={{ 
-              backgroundImage: `linear-gradient(to right, #ffffff 1px, transparent 1px), linear-gradient(to bottom, #ffffff 1px, transparent 1px)`,
-              backgroundSize: '48px 48px',
-              maskImage: 'radial-gradient(ellipse 80% 80% at 0% 50%, black 40%, transparent 100%)',
-              WebkitMaskImage: 'radial-gradient(ellipse 80% 80% at 0% 50%, black 40%, transparent 100%)'
-            }}
-          />
-
-          <div className="mb-6 flex items-center gap-2 text-sm font-bold tracking-[0.15em] text-[#ff5c00]">
-            <Layers className="size-5" />
+          <div className="mb-8 flex items-center gap-3 text-sm font-semibold uppercase tracking-[0.13em] text-[#ff5c00]">
+            <Box className="size-5" />
             PROBLEM LIBRARY
           </div>
 
-          <h2 className="text-4xl font-extrabold leading-[1.15] tracking-tight text-white sm:text-5xl lg:text-[52px]">
+          <h2 className="text-4xl font-extrabold leading-[1.22] tracking-[-0.035em] text-white sm:text-5xl lg:text-[52px]">
             <span className="text-[#ff5c00]">25+</span> Real Interview Problems, Ready to Solve.
           </h2>
 
-          <p className="mt-8 max-w-md text-lg leading-relaxed text-zinc-400">
-            These are the exact problems asked at FAANG — Uber, Twitter, WhatsApp, Netflix, URL Shortener, Pastebin, Instagram Feed, Notification System, and more.<br/><br/>
+          <p className="mt-8 max-w-[410px] text-lg leading-9 text-zinc-400">
+            These are the exact problems asked at FAANG — Uber, Twitter, WhatsApp, Netflix, URL Shortener, Pastebin, Instagram Feed, Notification System, and more.
+            <br />
             Each with difficulty tags.
           </p>
+
+          <div className="mt-16 grid w-full grid-cols-2 gap-y-8 sm:grid-cols-4 lg:grid-cols-4">
+            {problemStats.map((stat, index) => (
+              <div
+                key={stat.label}
+                className={`relative pr-5 ${index > 0 ? "border-l border-white/10 pl-5" : ""}`}
+              >
+                <stat.icon className={`mb-3 size-5 ${stat.tone}`} />
+                <div className="text-2xl font-semibold tracking-[-0.03em] text-white">{stat.value}</div>
+                <div className="mt-1 text-xs leading-5 text-zinc-500">{stat.label}</div>
+              </div>
+            ))}
+          </div>
+
+          <div className="pointer-events-none relative mt-16 hidden h-44 w-full opacity-30 lg:block">
+            <div className="absolute left-0 top-10 h-px w-72 bg-white/10" />
+            <div className="absolute left-12 top-6 grid h-11 w-20 place-items-center rounded-lg border border-white/10 text-[10px] text-zinc-600">
+              Users
+            </div>
+            <div className="absolute left-36 top-24 grid h-11 w-24 place-items-center rounded-lg border border-white/10 text-[10px] text-zinc-600">
+              API Gateway
+            </div>
+            <div className="absolute right-6 top-0 grid h-11 w-24 place-items-center rounded-lg border border-white/10 text-[10px] text-zinc-600">
+              Notification
+            </div>
+            <div className="absolute right-4 bottom-0 grid h-14 w-20 place-items-center rounded-lg border border-white/10 text-[10px] text-zinc-600">
+              Storage
+            </div>
+          </div>
         </div>
 
         {/* RIGHT COLUMN: Scrolling Card Grid */}
         <div className="flex flex-col">
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {problemData.map((problem, i) => (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.5, delay: i * 0.05 }}
+              <motion.article
+                initial={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.45, delay: i * 0.03 }}
                 key={problem.title}
-                className="group relative flex cursor-pointer flex-col rounded-[16px] border border-white/5 bg-[#0C0C0C] p-5 transition-all hover:border-white/10 hover:bg-[#111111]"
+                className="group relative flex min-h-[244px] cursor-pointer flex-col overflow-hidden rounded-[14px] border border-white/[0.11] bg-[linear-gradient(180deg,rgba(255,255,255,0.075),rgba(255,255,255,0.025))] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_24px_60px_rgba(0,0,0,0.32)] backdrop-blur-sm transition-all hover:-translate-y-1 hover:border-white/18 hover:bg-white/[0.065]"
               >
-                {/* Card Top: Icon, Title, Badge */}
-                <div className="flex items-start justify-between">
-                  <div className="flex items-start gap-4">
-                    {/* App Icon Box */}
-                    <div className="grid size-[46px] shrink-0 place-items-center rounded-xl bg-white/5 text-zinc-300 transition-colors group-hover:bg-white/10 group-hover:text-white">
+                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/45 to-transparent opacity-70" />
+
+                <div className="flex items-start justify-between gap-5">
+                  <div className="flex items-start gap-5">
+                    <div className={`grid size-16 shrink-0 place-items-center rounded-[10px] border text-zinc-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] ${problem.iconTone}`}>
                       {problem.brand ? (
-                        <span className="text-sm font-bold tracking-tight">{problem.brand}</span>
+                        <span className={problem.brand === "N" ? "text-4xl font-black tracking-[-0.08em]" : "text-lg font-medium tracking-[-0.08em]"}>
+                          {problem.brand}
+                        </span>
                       ) : (
-                        problem.icon && <problem.icon className="size-5" />
+                        problem.icon && <problem.icon className="size-8" />
                       )}
                     </div>
                     
                     <div>
-                      <h3 className="text-[15px] font-semibold text-white/90 transition-colors group-hover:text-white">
+                      <h3 className="max-w-[170px] text-lg font-semibold leading-6 tracking-[-0.02em] text-white/95 transition-colors group-hover:text-white">
                         {problem.title}
                       </h3>
-                      {/* Difficulty Badge */}
-                      <div className={`mt-2 w-fit rounded-[4px] border px-1.5 py-[2px] text-[10px] font-semibold tracking-wide ${problem.diffColor}`}>
+                      <div className={`mt-2 w-fit rounded-[6px] border px-2 py-1 text-sm font-medium leading-none ${problem.diffColor}`}>
                         {problem.difficulty}
                       </div>
                     </div>
                   </div>
                   
-                  {/* Chevron Right */}
-                  <ChevronRight className="size-5 text-zinc-600 transition-transform group-hover:translate-x-1 group-hover:text-zinc-400" />
+                  <ChevronRight className="mt-1 size-5 shrink-0 text-zinc-300 transition-transform group-hover:translate-x-1 group-hover:text-white" />
                 </div>
 
-                {/* Card Bottom: Time & Category */}
-                <div className="mt-6 flex items-center justify-between border-t border-white/5 pt-4 text-xs font-medium text-zinc-500">
+                <p className="mt-6 min-h-[78px] text-[15px] leading-7 text-zinc-300/80">
+                  {problem.description}
+                </p>
+
+                <div className="mt-auto flex items-center gap-6 border-t border-white/10 pt-4 text-sm font-medium text-zinc-300/80">
                   <div className="flex items-center gap-1.5">
-                    <Clock className="size-3.5" />
+                    <Clock className="size-4" />
                     {problem.time}
                   </div>
+                  <div className="h-6 w-px bg-white/10" />
                   <div>{problem.category}</div>
                 </div>
-              </motion.div>
+              </motion.article>
             ))}
           </div>
 
           {/* View All Action */}
-          <div className="mt-12 flex justify-center">
+          <div className="mt-4 flex justify-center rounded-[14px] border border-white/[0.08] bg-white/[0.025] py-7 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
             <Link 
               href="/problems" 
-              className="group flex items-center gap-2 text-sm font-semibold text-[#ff5c00] transition-colors hover:text-[#ff7a33]"
+              className="group flex items-center gap-3 text-lg font-medium text-[#ff5c00] underline underline-offset-4 transition-colors hover:text-[#ff7a33]"
             >
               View all 25 problems 
-              <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+              <ArrowRight className="size-5 transition-transform group-hover:translate-x-1" />
             </Link>
           </div>
         </div>
 
       </div>
+      
     </section>
   );
 }
