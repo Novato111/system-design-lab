@@ -2,52 +2,57 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+
 import { animate, motion } from "framer-motion";
 import {
   ArrowRight,
-  Activity,
-  BarChart3,
-  Bell,
-  Box,
-  Check,
-  ChevronDown,
-  ChevronLeft,
-  ChevronRight,
-  Clock,
-  Cloud,
-  FileText,
-  Gauge,
-  GitBranch,
-  HelpCircle,
-  ImageIcon,
-  Layers,
-  Leaf,
-  LinkIcon,
-  Mail,
-  MessageSquare,
-  Network,
-  Phone,
-  Save,
-  Search,
-  Send,
-  ServerCrash,
-  ShoppingCart,
+  
+
   Star,
-  TrendingUp,
-  Globe2,
-  Zap,
+
+
   Users as UsersIcon,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
+// Snappy, fast easing curve for that premium Apple/Vercel feel
+const snappyEase = [0.16, 1, 0.3, 1];
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1, // Fast wave effect between elements
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20, scale: 0.96 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      duration: 0.5,
+      ease: snappyEase,
+    },
+  },
+};
+
 export function HeroSection() {
   return (
     <section className="relative isolate flex w-full items-center justify-center overflow-hidden bg-[#050505] px-4 pb-14 pt-28 sm:px-6 sm:pt-32 lg:px-8 lg:pb-16 lg:pt-36">
       
-      {/* --- BULLETPROOF ROW/COL LINE GRID --- */}
-      <div className="pointer-events-none absolute inset-0 z-0 h-full w-full">
+      {/* --- BULLETPROOF ROW/COL LINE GRID (Fade in smoothly) --- */}
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1.2, ease: "easeOut" }}
+        className="pointer-events-none absolute inset-0 z-0 h-full w-full"
+      >
         {/* Pure CSS Grid - Guaranteed to render */}
         <div 
           className="absolute inset-0"
@@ -65,17 +70,23 @@ export function HeroSection() {
 
         {/* Bottom fade out so the grid ends exactly where the hero ends */}
         <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#050505] to-transparent pointer-events-none" />
-      </div>
+      </motion.div>
       {/* ------------------------------------------------ */}
 
-      {/* Grid Layout Container */}
-      
-      <div className="relative z-[2] mx-auto grid w-full max-w-[1180px] items-center gap-8 lg:grid-cols-[410px_minmax(520px,1fr)] xl:gap-12">
+      {/* Animated Grid Layout Container */}
+      <motion.div 
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        className="relative z-[2] mx-auto grid w-full max-w-[1180px] items-center gap-8 lg:grid-cols-[410px_minmax(520px,1fr)] xl:gap-12"
+      >
         
         {/* LEFT COLUMN: Content */}
         <div className="flex min-w-0 flex-col items-center text-center lg:items-start lg:text-left">
           
-          <div
+          <motion.div
+          //@ts-expect-error
+            variants={itemVariants}
             className="mb-5 inline-flex max-w-full items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-zinc-300 backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] sm:mb-6 sm:text-[10px]"
           >
             <span className="relative flex size-2">
@@ -83,22 +94,28 @@ export function HeroSection() {
               <span className="relative inline-flex size-2 rounded-full bg-[#9BE870]"></span>
             </span>
             <span>Practice. Visualize. Master.</span>
-          </div>
+          </motion.div>
           
-          <h1
+          <motion.h1
+            //@ts-expect-error
+            variants={itemVariants}
             className="max-w-[680px] text-[34px] font-extrabold leading-[1.08] tracking-[-0.04em] text-white sm:text-[42px] lg:text-[52px]"
           >
             Practice System Design Like It&apos;s{" "}
             <span className="text-[#9BE870]">Production.</span>
-          </h1>
+          </motion.h1>
           
-          <p
+          <motion.p
+            //@ts-expect-error
+            variants={itemVariants}
             className="mt-5 max-w-[430px] text-sm leading-7 text-zinc-400 sm:text-base"
           >
             Build real-world architectures on an interactive canvas, simulate failures, get AI feedback, and level up for your next system design interview.
-          </p>
+          </motion.p>
           
-          <form
+          <motion.form
+            //@ts-expect-error
+            variants={itemVariants}
             className="mt-7 grid w-full max-w-[430px] gap-2.5 sm:grid-cols-[1fr_auto]"
           >
             <label className="sr-only" htmlFor="hero-email">Email</label>
@@ -116,9 +133,11 @@ export function HeroSection() {
                 Start Designing for Free <ArrowRight className="ml-2 size-4" />
               </Link>
             </Button>
-          </form>
+          </motion.form>
 
-          <div
+          <motion.div
+            //@ts-expect-error
+            variants={itemVariants}
             className="mt-7 flex flex-wrap items-center justify-center gap-4 lg:justify-start"
           >
             <div className="flex -space-x-3">
@@ -140,11 +159,15 @@ export function HeroSection() {
               </div>
               <p className="mt-1 text-xs font-medium text-zinc-500 sm:text-[13px]">Upvoted by 25+ engineers worldwide</p>
             </div>
-          </div>
+          </motion.div>
         </div>
 
-        {/* RIGHT COLUMN: Image */}
-        <div className="relative flex w-full min-w-0 items-center justify-center">
+        {/* RIGHT COLUMN: Animated Image Card */}
+        <motion.div 
+          //@ts-expect-error
+          variants={itemVariants}
+          className="relative flex w-full min-w-0 items-center justify-center"
+        >
           <div
             className="relative w-full max-w-[640px] overflow-hidden rounded-[16px] border border-white/10 bg-[#0B0B0C] p-1.5 shadow-[0_0_0_1px_rgba(255,255,255,0.03),0_30px_80px_rgba(0,0,0,0.65)] backdrop-blur-xl perspective-[1000px] lg:max-w-none"
           >
@@ -161,8 +184,8 @@ export function HeroSection() {
               className="h-auto max-h-[320px] w-full rounded-[12px] object-cover object-left-top ring-1 ring-white/10 sm:max-h-[420px] lg:max-h-none"
             />
           </div>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </section>
   );
 }

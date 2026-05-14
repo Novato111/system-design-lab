@@ -80,13 +80,13 @@ export function SiteHeader() {
             variant="ghost"
             className="hidden h-11 rounded-[10px] px-5 text-white/70 hover:bg-white/10 hover:text-white sm:inline-flex"
           >
-            <Link href="/problems">Log in</Link>
+            <Link href="/coming-soon">Log in</Link>
           </Button>
           <Button
             asChild
             className="h-9 rounded-[10px] bg-white px-3 text-xs font-semibold text-black shadow-[0_0_28px_rgba(255,255,255,0.18)] transition-all hover:scale-105 hover:bg-zinc-200 sm:h-10 sm:px-4 sm:text-sm lg:h-11 lg:px-5"
           >
-            <Link href="/problems">
+            <Link href="/coming-soon">
               Start for Free <ArrowRight className="ml-1.5 size-3.5 sm:size-4" />
             </Link>
           </Button>

@@ -47,7 +47,7 @@ import { AnimatedCanvasMock } from "./AnimatedCanvasMock";
 import { SequenceEvaluationPanel } from "./SequenceEvaluationPanel";
 
 // Snappy, fast easing curve for the premium card pop-in
-const snappyEase = [0.16, 1, 0.3, 1];
+const snappyEase = [0.16, 1, 0.3, 1] as const;
 
 const containerVariants = {
   hidden: { opacity: 0 },

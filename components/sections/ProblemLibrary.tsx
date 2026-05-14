@@ -246,7 +246,7 @@ export function ProblemLibrary() {
           {/* Action Button - Always visible on all screens */}
           <div className="mt-8 flex w-full">
             <Link
-              href="/problems"
+              href="/coming-soon"
               className="group flex h-12 w-full max-w-[310px] items-center justify-center gap-3 rounded-[12px] border border-white/[0.08] bg-white/[0.025] text-sm font-semibold text-[#ff5c00] shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] transition hover:border-[#ff5c00]/35 hover:bg-[#ff5c00]/5 sm:h-14 sm:text-base"
             >
               View all 25 problems

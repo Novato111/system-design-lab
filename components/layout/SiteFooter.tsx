@@ -59,7 +59,6 @@ export function SiteFooter() {
       {/* Fast Marquee "Launching Soon" Bottom Bar */}
       <div className="relative flex h-14 w-full items-center overflow-hidden bg-gradient-to-r from-[#e65300] via-[#ff5c00] to-[#ff7a1a]">
         {/* Subtle Construction Stripes Overlay */}
-        <div className="absolute inset-0 z-0 opacity-15 [background-image:linear-gradient(-45deg,#000_25%,transparent_25%,transparent_50%,#000_50%,#000_75%,transparent_75%,transparent)] [background-size:20px_20px]" />
         
         {/* Marquee Animation Container */}
         <motion.div

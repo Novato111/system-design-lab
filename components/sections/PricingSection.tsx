@@ -252,7 +252,7 @@ function PricingCard({
                 : "border border-green-500/35 bg-transparent text-white hover:bg-green-500/10"
           }`}
         >
-          <Link href="/problems">{plan.cta}</Link>
+          <Link href="/coming-soon">{plan.cta}</Link>
         </Button>
         {plan.footnote && <p className="mt-2.5 text-center text-[9px] text-zinc-500 lg:mt-3 lg:text-[10px]">{plan.footnote}</p>}
       </div>

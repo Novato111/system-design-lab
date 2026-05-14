@@ -87,7 +87,7 @@ export function FinalCta() {
               size="lg"
               className="h-14 w-full sm:w-auto rounded-xl bg-white px-8 text-base font-bold text-black shadow-[0_0_40px_rgba(255,255,255,0.2)] transition-all hover:scale-105 hover:bg-slate-200"
             >
-              <Link href="/problems">
+              <Link href="/coming-soon">
                 Start for Free <ArrowRight className="ml-2 size-5" />
               </Link>
             </Button>
