@@ -1,4 +1,4 @@
-# 🚀 System Design Labs
+# 🚀Kernel.io | System Design Labs
 
 Live Demo: https://system-design-labs.vercel.app/
 
