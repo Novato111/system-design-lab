@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useRef } from "react";
+import posthog from "posthog-js";
 import {
   Check,
   ChevronDown,
@@ -251,6 +252,12 @@ function PricingCard({
                 ? "border border-violet-500/50 bg-transparent text-violet-300 hover:bg-violet-500/10"
                 : "border border-green-500/35 bg-transparent text-white hover:bg-green-500/10"
           }`}
+          onClick={() =>
+            posthog.capture("pricing_plan_cta_clicked", {
+              plan: plan.name,
+              price: plan.price,
+            })
+          }
         >
           <Link href="/coming-soon">{plan.cta}</Link>
         </Button>

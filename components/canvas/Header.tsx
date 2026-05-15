@@ -4,6 +4,7 @@
 import { useState } from "react";
 import { useCanvasStore } from "@/store/canvasStore";
 import { toast } from "sonner";
+import posthog from "posthog-js";
 
 interface HeaderProps {
   problemId: string;
@@ -43,9 +44,17 @@ export default function Header({ problemId }: HeaderProps) {
       const report = await res.json();
       setEvaluationReport(report);
 
+      posthog.capture("architecture_evaluated", {
+        problem_id: problemId,
+        score: report.score,
+        node_count: nodes.length,
+        edge_count: edges.length,
+      });
+
       toast.success(`Score: ${report.score}/100!`, { id: toastId });
     } catch (error) {
       console.error(error);
+      posthog.captureException(error);
       toast.error("Evaluation failed to run.", { id: toastId });
     } finally {
       setIsEvaluating(false);
@@ -69,9 +78,16 @@ export default function Header({ problemId }: HeaderProps) {
       const timeline = await res.json();
       playSimulation(timeline);
 
+      posthog.capture("simulation_started", {
+        problem_id: problemId,
+        node_count: nodes.length,
+        edge_count: edges.length,
+      });
+
       toast.success("Simulation started!", { id: toastId });
     } catch (error) {
       console.error(error);
+      posthog.captureException(error);
       toast.error("Failed to run simulation.", { id: toastId });
     } finally {
       setIsLoadingSim(false);
@@ -99,9 +115,16 @@ export default function Header({ problemId }: HeaderProps) {
 
       if (!response.ok) throw new Error("Failed to save");
 
+      posthog.capture("architecture_saved", {
+        problem_id: problemId,
+        node_count: nodes.length,
+        edge_count: edges.length,
+      });
+
       toast.success("Architecture saved successfully!", { id: toastId });
     } catch (error) {
       console.error(error);
+      posthog.captureException(error);
       toast.error("Failed to save architecture.", { id: toastId });
     } finally {
       setIsSaving(false);

@@ -1,5 +1,6 @@
 // app/api/evaluate/route.ts
 import { NextResponse } from "next/server";
+import { getPostHogClient } from "@/lib/posthog-server";
 
 export async function POST(req: Request) {
   try {
@@ -159,6 +160,20 @@ export async function POST(req: Request) {
     }
 
     score = Math.max(0, score);
+
+    const posthog = getPostHogClient();
+    posthog.capture({
+      distinctId: problemId ?? "anonymous",
+      event: "architecture_evaluation_completed",
+      properties: {
+        problem_id: problemId,
+        score,
+        node_count: nodes?.length ?? 0,
+        edge_count: edges?.length ?? 0,
+        feedback_count: feedback.length,
+        critical_issues: feedback.filter((f) => f.type === "critical").length,
+      },
+    });
 
     return NextResponse.json({ score, detectedPaths, feedback });
   } catch (error: any) {

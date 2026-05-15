@@ -41,6 +41,7 @@ import {
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import posthog from "posthog-js";
 
 // Reusable premium easing curve for that "shadcn" feel
 const premiumEase = [0.06, 1, 0.3, 1] as const;
@@ -86,6 +87,7 @@ export function FinalCta() {
               asChild
               size="lg"
               className="h-14 w-full sm:w-auto rounded-xl bg-white px-8 text-base font-bold text-black shadow-[0_0_40px_rgba(255,255,255,0.2)] transition-all hover:scale-105 hover:bg-slate-200"
+              onClick={() => posthog.capture("final_cta_clicked", { location: "bottom_cta" })}
             >
               <Link href="/coming-soon">
                 Start for Free <ArrowRight className="ml-2 size-5" />

@@ -2,8 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRef } from "react";
 
 import { animate, motion } from "framer-motion";
+import posthog from "posthog-js";
 import {
   ArrowRight,
   
@@ -43,6 +45,15 @@ const itemVariants = {
 };
 
 export function HeroSection() {
+  const emailRef = useRef<HTMLInputElement>(null);
+
+  const handleHeroCtaClick = () => {
+    posthog.capture("hero_cta_clicked", {
+      email: emailRef.current?.value || undefined,
+      location: "hero",
+    });
+  };
+
   return (
     <section className="relative isolate flex w-full items-center justify-center overflow-hidden bg-[#050505] px-4 pb-14 pt-28 sm:px-6 sm:pt-32 lg:px-8 lg:pb-16 lg:pt-36">
       
@@ -116,6 +127,7 @@ export function HeroSection() {
           >
             <label className="sr-only" htmlFor="hero-email">Email</label>
             <input
+              ref={emailRef}
               id="hero-email"
               className="h-11 min-w-0 flex-1 rounded-[10px] border border-white/10 bg-[#111111]/50 px-4 text-sm text-white outline-none backdrop-blur-md transition placeholder:text-zinc-500 focus:border-white/30 focus:ring-1 focus:ring-white/30 sm:h-12"
               placeholder="Enter your email"
@@ -124,6 +136,7 @@ export function HeroSection() {
               asChild
               size="lg"
               className="h-11 shrink-0 rounded-[10px] bg-white px-5 text-sm font-bold text-black shadow-[0_0_20px_rgba(255,255,255,0.1)] transition-all hover:scale-[1.02] hover:bg-zinc-200 sm:h-12"
+              onClick={handleHeroCtaClick}
             >
               <Link href="/coming-soon">
                 Start Designing for Free <ArrowRight className="ml-2 size-4" />

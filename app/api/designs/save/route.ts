@@ -2,6 +2,7 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { DesignGraph } from "@/types";
+import { getPostHogClient } from "@/lib/posthog-server";
 
 export async function POST(request: Request) {
   try {
@@ -29,7 +30,19 @@ export async function POST(request: Request) {
 
     if (error) throw error;
 
-    // 4. Return success to the frontend
+    // 4. Track design saved event
+    const posthog = getPostHogClient();
+    posthog.capture({
+      distinctId: problemId,
+      event: "design_saved",
+      properties: {
+        problem_id: problemId,
+        node_count: nodes?.length ?? 0,
+        edge_count: edges?.length ?? 0,
+        design_id: data.id,
+      },
+    });
+
     return NextResponse.json({ success: true, designId: data.id });
   } catch (error: any) {
     console.error("Save Error:", error);

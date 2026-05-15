@@ -11,6 +11,7 @@ import { useCanvasStore } from "@/store/canvasStore";
 import { ComponentType } from "@/types";
 import TutorPanel from "@/components/canvas/TutorPanel";
 // Removed Chat import as it seemed unused in your JSX, add back if needed!
+import posthog from "posthog-js";
 
 export default function CanvasPage({
   params,
@@ -84,8 +85,13 @@ export default function CanvasPage({
       };
 
       addNode(type, position);
+
+      posthog.capture("canvas_component_dropped", {
+        problem_id: problemId,
+        component_type: type,
+      });
     },
-    [addNode],
+    [addNode, problemId],
   );
 
   // 4. THE HYDRATION GUARD

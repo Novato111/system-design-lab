@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import problems from "@/data/problems.json";
+import posthog from "posthog-js";
 
 export default function ProblemsPage() {
   return (
@@ -42,6 +45,13 @@ export default function ProblemsPage() {
               <Link
                 href={`/canvas/${problem.id}`}
                 className="inline-flex w-full justify-center px-4 py-2 bg-zinc-100 text-zinc-900 rounded-md font-medium hover:bg-zinc-200 transition-colors"
+                onClick={() =>
+                  posthog.capture("problem_selected", {
+                    problem_id: problem.id,
+                    problem_title: problem.title,
+                    difficulty: problem.difficulty,
+                  })
+                }
               >
                 Launch Simulator
               </Link>
